@@ -1,0 +1,9 @@
+{
+  "name": "cognition-battleship",
+  "version": "1.0.0",
+  "description": "Single-page Battleship game vs. an AI opponent.",
+  "private": true,
+  "scripts": {
+    "test": "node --test"
+  }
+}
