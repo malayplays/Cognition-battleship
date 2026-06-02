@@ -1,41 +1,46 @@
-/* Battleship — modern pixel-art theme.
+/* Battleship — dark theme, responsive layout.
    Styling only: hooks match the classes toggled by js/render.js. */
 
 :root {
-  --cell-size: 36px;
+  --cell-size: clamp(28px, 4vw, 36px);
 
-  /* refined dark base */
-  --bg: #0e1828;
-  --bg-2: #0b1322;
-  --panel: #15243a;
-  --panel-2: #1b2f49;
-  --line: #27395a;
+  /* dark theme — layered greys for depth */
+  --bg:       #0d0d0d;
+  --bg-2:     #141414;
+  --panel:    #1a1a1a;
+  --panel-2:  #222222;
+  --line:     #2e2e2e;
 
-  /* water */
-  --water: #16415c;
-  --water-hover: #1f5e84;
-  --grid-gap: #0a1422;
+  /* water cells */
+  --water:       #1b1b1b;
+  --water-hover: #282828;
+  --grid-gap:    #111111;
 
-  /* crisp accents */
-  --accent: #22d3ee;      /* cyan */
-  --accent-2: #ff6b35;    /* coral */
+  /* accent — cool cyan for player fleet / selection */
+  --accent:      #22d3ee;
+  --accent-glow: rgba(34, 211, 238, 0.35);
+
+  /* accent-2 — warm orange for hits */
+  --accent-2:    #ff6b35;
   --accent-2-hi: #ff8757;
+  --accent-2-glow: rgba(255, 107, 53, 0.40);
 
-  /* fleet / shots — clearly distinct colors */
-  --ship: #5a86ff;
-  --ship-preview: #6f9cff;
-  --ship-invalid: #ff4d6d;
-  --hit: #ff6b35;
-  --miss: #bfe6ff;
-  --sunk: #b3122e;
+  /* fleet / shots */
+  --ship:           #22d3ee;
+  --ship-preview:   rgba(34, 211, 238, 0.35);
+  --ship-invalid:   #ff4d6d;
+  --hit:            #ff6b35;
+  --miss:           #555555;
+  --sunk:           #b3122e;
 
-  --text: #e8eef7;
-  --text-dim: #9fb0c8;
+  /* text — WCAG AA compliant on dark surfaces */
+  --text:     #d4d4d4;
+  --text-dim: #888888;
 
   --font-pixel: "Pixelify Sans", "Trebuchet MS", system-ui, sans-serif;
   --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 
-  --radius: 10px;
+  --radius:    10px;
   --radius-sm: 8px;
   --ease: cubic-bezier(0.34, 1.2, 0.64, 1);
 }
@@ -45,11 +50,10 @@
 body {
   margin: 0;
   font-family: var(--font-sans);
-  background:
-    radial-gradient(1200px 600px at 50% -10%, #163150 0%, transparent 60%),
-    var(--bg);
+  background: var(--bg);
   color: var(--text);
   min-height: 100vh;
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* ---------- header ---------- */
@@ -60,7 +64,7 @@ header {
   gap: 1rem;
   padding: 1.1rem 2rem;
   background: var(--bg-2);
-  border-bottom: 2px solid var(--line);
+  border-bottom: 1px solid var(--line);
   flex-wrap: wrap;
 }
 
@@ -71,6 +75,7 @@ header h1 {
   font-size: 2.4rem;
   letter-spacing: 1px;
   color: var(--accent);
+  text-shadow: 0 0 12px var(--accent-glow);
 }
 
 .controls label {
@@ -133,25 +138,26 @@ select {
   cursor: pointer;
   transition: transform 0.12s var(--ease), background 0.15s ease,
     border-color 0.15s ease, box-shadow 0.15s ease, color 0.15s ease;
+  min-height: 44px; /* touch-friendly */
 }
 
 button:hover:not(:disabled),
 select:hover {
-  background: #233a5a;
+  background: #2d2d2d;
   border-color: var(--accent);
   transform: translateY(-2px);
 }
 
 button:active:not(:disabled) {
   transform: translateY(0);
-  background: #1d3252;
+  background: #333333;
 }
 
 button:focus-visible,
 select:focus-visible {
   outline: none;
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.35);
+  box-shadow: 0 0 0 3px var(--accent-glow);
 }
 
 button:disabled {
@@ -162,7 +168,7 @@ button:disabled {
 /* primary actions */
 #start-btn,
 #play-again-btn {
-  color: #1a0c06;
+  color: #0d0d0d;
   background: var(--accent-2);
   border-color: var(--accent-2);
   font-weight: 600;
@@ -214,6 +220,10 @@ button:disabled {
   flex-wrap: wrap;
 }
 
+.board-wrapper {
+  flex: 0 1 auto;
+}
+
 .board-wrapper h3 {
   text-align: center;
   margin: 0 0 0.85rem;
@@ -233,6 +243,7 @@ button:disabled {
   border: 1px solid var(--line);
   border-radius: var(--radius);
   user-select: none;
+  -webkit-user-select: none;
 }
 
 .cell {
@@ -258,12 +269,13 @@ button:disabled {
 
 .cell.playable { cursor: crosshair; }
 
-/* fleet — pixel armor plating */
+/* fleet — ship cells with accent glow */
 .cell.ship {
   background-color: var(--ship);
   background-image: url("assets/ship.png");
   background-size: 100% 100%;
   image-rendering: pixelated;
+  box-shadow: 0 0 6px var(--accent-glow);
 }
 
 .cell.preview {
@@ -276,11 +288,15 @@ button:disabled {
   background: var(--ship-invalid);
 }
 
-/* shot markers — crisp pixel assets */
+/* shot markers */
 .cell.hit,
 .cell.sunk { background: rgba(255, 107, 53, 0.14); }
-.cell.miss { background: rgba(191, 230, 255, 0.1); }
+.cell.miss { background: rgba(85, 85, 85, 0.22); }
 .cell.sunk { background: rgba(179, 18, 46, 0.22); }
+
+/* glow on hit and sunk */
+.cell.hit { box-shadow: 0 0 8px var(--accent-2-glow); }
+.cell.sunk { box-shadow: 0 0 8px rgba(179, 18, 46, 0.45); }
 
 .cell.hit::after,
 .cell.miss::after,
@@ -307,7 +323,7 @@ button:disabled {
   animation: ripple-in 0.3s ease-out both;
 }
 
-/* one-time pixel particle burst on a fresh hit */
+/* pixel particle burst on hit */
 .cell.hit::before,
 .cell.sunk::before {
   content: "";
@@ -333,8 +349,10 @@ button:disabled {
   animation: spark 0.5s ease-out forwards;
 }
 
+/* playable hover — subtle water highlight with accent glow */
 .board[data-owner="ai"] .cell.playable:hover:not(.hit):not(.miss):not(.sunk) {
   background: var(--water-hover);
+  box-shadow: 0 0 6px var(--accent-glow);
 }
 
 @keyframes pop {
@@ -358,6 +376,7 @@ button:disabled {
   font-weight: 600;
   margin-bottom: 0.6rem;
   color: var(--accent);
+  text-shadow: 0 0 8px var(--accent-glow);
 }
 
 #message-log {
@@ -377,7 +396,7 @@ button:disabled {
 .modal {
   position: fixed;
   inset: 0;
-  background: rgba(7, 12, 22, 0.82);
+  background: rgba(0, 0, 0, 0.85);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -390,7 +409,9 @@ button:disabled {
   border-radius: var(--radius);
   text-align: center;
   border: 1px solid var(--accent);
+  box-shadow: 0 0 24px var(--accent-glow);
   animation: pop 0.28s var(--ease) both;
+  max-width: 90vw;
 }
 
 .modal-content h2 {
@@ -398,6 +419,7 @@ button:disabled {
   font-family: var(--font-pixel);
   font-size: 2rem;
   color: var(--accent);
+  text-shadow: 0 0 12px var(--accent-glow);
 }
 
 .modal-content p {
@@ -405,17 +427,143 @@ button:disabled {
   color: var(--text-dim);
 }
 
-/* ---------- responsive ---------- */
-@media (max-width: 720px) {
-  :root { --cell-size: 28px; }
-  header { padding: 0.9rem 1.1rem; }
-  header h1 { font-size: 1.9rem; }
-  main { padding: 1.25rem 1rem 2rem; gap: 1.5rem; }
-  .boards { gap: 1.25rem; }
+/* ---------- mobile board toggle ---------- */
+.board-toggle {
+  display: none; /* hidden on desktop */
+  gap: 0;
+  margin-bottom: 0.75rem;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  border: 1px solid var(--line);
 }
 
-@media (max-width: 380px) {
-  :root { --cell-size: 24px; }
+.board-toggle button {
+  flex: 1;
+  border: none;
+  border-radius: 0;
+  padding: 0.65rem 0.5rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  background: var(--panel-2);
+  color: var(--text-dim);
+  min-height: 44px;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.board-toggle button:hover:not(:disabled) {
+  transform: none;
+}
+
+.board-toggle button.active {
+  background: var(--accent);
+  color: #0d0d0d;
+}
+
+/* ---------- responsive ---------- */
+
+/* Tablet / smaller desktop */
+@media (max-width: 720px) {
+  :root { --cell-size: clamp(24px, 7.5vw, 30px); }
+  header { padding: 0.9rem 1.1rem; }
+  header h1 { font-size: 1.9rem; }
+  main { padding: 1.25rem 0.75rem 2rem; gap: 1.25rem; }
+  .boards { gap: 1.25rem; }
+  .panel { padding: 1rem 1rem; }
+}
+
+/* Mobile portrait — single board with toggle */
+@media (max-width: 520px) {
+  :root { --cell-size: clamp(26px, calc((100vw - 60px) / 11), 34px); }
+
+  header {
+    padding: 0.75rem 1rem;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+  header h1 { font-size: 1.6rem; }
+
+  main {
+    padding: 1rem 0.5rem 2rem;
+    gap: 1rem;
+  }
+
+  .panel {
+    padding: 0.85rem 0.85rem;
+  }
+
+  .setup-buttons {
+    gap: 0.5rem;
+  }
+
+  .setup-buttons button {
+    flex: 1 1 auto;
+    min-width: 0;
+    font-size: 0.9rem;
+    padding: 0.5rem 0.75rem;
+  }
+
+  /* Show the board toggle */
+  .board-toggle {
+    display: flex;
+  }
+
+  /* Stack boards, hide inactive one */
+  .boards {
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+
+  .board-wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .board-wrapper h3 {
+    display: none; /* toggle bar replaces headings */
+  }
+
+  .board-wrapper.hidden-mobile {
+    display: none;
+  }
+
+  /* Center the board */
+  .board {
+    padding: 4px;
+  }
+
+  .modal-content {
+    padding: 1.5rem 1.25rem;
+  }
+
+  .modal-content h2 {
+    font-size: 1.5rem;
+  }
+
+  #fleet-list li {
+    font-size: 0.85rem;
+    padding: 0.3rem 0.6rem;
+  }
+
+  .controls label {
+    font-size: 0.9rem;
+  }
+
+  #turn-indicator {
+    font-size: 1.15rem;
+  }
+
+  #message-log {
+    max-height: 90px;
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 360px) {
+  :root { --cell-size: clamp(22px, calc((100vw - 50px) / 11), 28px); }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -9,6 +9,7 @@ const Controller = (() => {
     bindEvents();
     // AI fleet placed at startup so a quick Randomize on player side is enough.
     randomizeFleet(state.ai);
+    switchToBoard('player');
     refreshAll();
   }
 
@@ -17,6 +18,11 @@ const Controller = (() => {
     document.getElementById('player-board').addEventListener('mouseover', onPlayerBoardHover);
     document.getElementById('player-board').addEventListener('mouseleave', () => Render.clearPreview());
     document.getElementById('ai-board').addEventListener('click', onEnemyBoardClick);
+
+    // Touch: show placement preview on touch move/start (tap equivalent of hover)
+    document.getElementById('player-board').addEventListener('touchstart', onPlayerBoardTouch, { passive: true });
+    document.getElementById('player-board').addEventListener('touchmove', onPlayerBoardTouch, { passive: true });
+    document.getElementById('player-board').addEventListener('touchend', () => Render.clearPreview());
 
     document.getElementById('rotate-btn').addEventListener('click', () => {
       state.placement.orientation = state.placement.orientation === 'H' ? 'V' : 'H';
@@ -37,6 +43,9 @@ const Controller = (() => {
     document.getElementById('difficulty').addEventListener('change', e => {
       state.difficulty = e.target.value;
     });
+
+    // Mobile board toggle
+    initBoardToggle();
   }
 
   function onPlayerBoardClick(e) {
@@ -107,6 +116,7 @@ const Controller = (() => {
     Render.setEnemyPlayable(true);
     Render.renderTurnIndicator(state);
     Render.log(state, 'Battle begins. You fire first.');
+    switchToBoard('ai');
   }
 
   function endGame(winner) {
@@ -127,7 +137,44 @@ const Controller = (() => {
     Render.setSetupPanelVisible(true);
     Render.setRotateLabel(state.placement.orientation);
     document.getElementById('difficulty').value = state.difficulty;
+    switchToBoard('player');
     refreshAll();
+  }
+
+  function onPlayerBoardTouch(e) {
+    if (state.phase !== 'setup') return;
+    const touch = e.touches[0];
+    if (!touch) return;
+    const el = document.elementFromPoint(touch.clientX, touch.clientY);
+    if (!el) return;
+    const cell = el.closest('.cell');
+    if (!cell || cell.classList.contains('label')) return;
+    if (state.placement.nextIndex >= state.player.ships.length) return;
+    Render.showPreview(state, +cell.dataset.row, +cell.dataset.col);
+  }
+
+  function initBoardToggle() {
+    const toggle = document.getElementById('board-toggle');
+    if (!toggle) return;
+    const buttons = toggle.querySelectorAll('button');
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const target = btn.dataset.target;
+        buttons.forEach(b => b.classList.toggle('active', b === btn));
+        document.getElementById('player-wrapper').classList.toggle('hidden-mobile', target !== 'player');
+        document.getElementById('ai-wrapper').classList.toggle('hidden-mobile', target !== 'ai');
+      });
+    });
+  }
+
+  function switchToBoard(target) {
+    const toggle = document.getElementById('board-toggle');
+    if (!toggle || getComputedStyle(toggle).display === 'none') return;
+    toggle.querySelectorAll('button').forEach(b => {
+      b.classList.toggle('active', b.dataset.target === target);
+    });
+    document.getElementById('player-wrapper').classList.toggle('hidden-mobile', target !== 'player');
+    document.getElementById('ai-wrapper').classList.toggle('hidden-mobile', target !== 'ai');
   }
 
   function refreshAll() {
