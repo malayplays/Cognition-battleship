@@ -41,11 +41,15 @@
     </section>
 
     <section class="boards">
-      <div class="board-wrapper">
+      <div class="board-toggle" id="board-toggle">
+        <button class="active" data-target="player">Your Fleet</button>
+        <button data-target="ai">Enemy Waters</button>
+      </div>
+      <div class="board-wrapper" id="player-wrapper">
         <h3>Your Fleet</h3>
         <div id="player-board" class="board" data-owner="player"></div>
       </div>
-      <div class="board-wrapper">
+      <div class="board-wrapper" id="ai-wrapper">
         <h3>Enemy Waters</h3>
         <div id="ai-board" class="board" data-owner="ai"></div>
       </div>
