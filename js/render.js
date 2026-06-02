@@ -38,30 +38,92 @@ const Render = (() => {
   }
 
   function renderBoard(containerId, side, { revealShips }) {
+    const isEnemy = containerId === 'ai-board';
     for (let r = 0; r < BOARD_SIZE; r++) {
       for (let c = 0; c < BOARD_SIZE; c++) {
         const el = cellEl(containerId, r, c);
         if (!el) continue;
-        // Preserve hit-new/sunk-new temporarily for animation
+        // Preserve hit-new/sunk-new/miss-new temporarily for animation
         const wasHitNew = el.classList.contains('hit-new');
         const wasSunkNew = el.classList.contains('sunk-new');
+        const wasMissNew = el.classList.contains('miss-new');
         el.className = 'cell';
+        // Clear data attributes
+        delete el.dataset.shipType;
+        delete el.dataset.shipPos;
+        delete el.dataset.shipOrient;
+        // Remove dynamic children (smoke, splash, wreckage)
+        el.querySelectorAll('.smoke-puff, .splash-drop, .wreckage-piece, .ship-wave').forEach(c => c.remove());
+
         const cell = side.board[r][c];
         const shipId = cell.ship;
         const ship = shipId ? side.ships.find(s => s.id === shipId) : null;
 
         if (cell.shot && shipId) {
-          if (ship && ship.sunk) el.classList.add('sunk');
-          else el.classList.add('hit');
+          if (ship && ship.sunk) {
+            el.classList.add('sunk');
+            addWrackageDetails(el);
+            if (ship) setShipCellData(el, ship, r, c);
+          } else {
+            el.classList.add('hit');
+            addSmokeDetails(el);
+          }
         } else if (cell.shot) {
           el.classList.add('miss');
+          addSplashDetails(el);
         } else if (shipId && revealShips) {
           el.classList.add('ship');
+          if (ship) setShipCellData(el, ship, r, c);
+        } else if (isEnemy && shipId && ship && ship.sunk) {
+          el.classList.add('sunk-revealed');
+          if (ship) setShipCellData(el, ship, r, c);
         }
 
         if (wasHitNew) el.classList.add('hit-new');
         if (wasSunkNew) el.classList.add('sunk-new');
+        if (wasMissNew) el.classList.add('miss-new');
       }
+    }
+  }
+
+  // Set ship type, position (bow/mid/stern), orientation data on cell
+  function setShipCellData(el, ship, r, c) {
+    el.dataset.shipType = ship.id;
+    // Determine orientation from ship cells
+    if (ship.cells.length >= 2) {
+      const orient = ship.cells[0][0] === ship.cells[1][0] ? 'H' : 'V';
+      el.dataset.shipOrient = orient;
+      // Find cell index in ship
+      const idx = ship.cells.findIndex(([sr, sc]) => sr === r && sc === c);
+      if (idx === 0) el.dataset.shipPos = 'bow';
+      else if (idx === ship.cells.length - 1) el.dataset.shipPos = 'stern';
+    }
+  }
+
+  // Add smoke puff elements to hit cells
+  function addSmokeDetails(el) {
+    for (let i = 0; i < 2; i++) {
+      const puff = document.createElement('div');
+      puff.className = 'smoke-puff';
+      el.appendChild(puff);
+    }
+  }
+
+  // Add splash droplet elements to miss cells
+  function addSplashDetails(el) {
+    for (let i = 0; i < 3; i++) {
+      const drop = document.createElement('div');
+      drop.className = 'splash-drop';
+      el.appendChild(drop);
+    }
+  }
+
+  // Add wreckage debris to sunk cells
+  function addWrackageDetails(el) {
+    for (let i = 0; i < 2; i++) {
+      const piece = document.createElement('div');
+      piece.className = 'wreckage-piece';
+      el.appendChild(piece);
     }
   }
 
@@ -69,7 +131,7 @@ const Render = (() => {
   function markNewShot(containerId, r, c, type) {
     const el = cellEl(containerId, r, c);
     if (!el) return;
-    const cls = type === 'sunk' ? 'sunk-new' : type === 'hit' ? 'hit-new' : '';
+    const cls = type === 'sunk' ? 'sunk-new' : type === 'hit' ? 'hit-new' : type === 'miss' ? 'miss-new' : '';
     if (cls) {
       el.classList.add(cls);
       setTimeout(() => el.classList.remove(cls), 1500);

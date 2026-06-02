@@ -143,6 +143,7 @@ const Controller = (() => {
       Render.markNewShot('ai-board', row, col, 'hit');
     } else {
       Effects.showAttackResult('Miss!', 'miss');
+      Render.markNewShot('ai-board', row, col, 'miss');
     }
 
     if (result.sunk) {
@@ -189,6 +190,8 @@ const Controller = (() => {
       const hitEl = document.querySelector(`#player-board .cell[data-row="${move.row}"][data-col="${move.col}"]`);
       Effects.sparks(hitEl);
       Render.markNewShot('player-board', move.row, move.col, 'hit');
+    } else {
+      Render.markNewShot('player-board', move.row, move.col, 'miss');
     }
 
     if (result.sunk) {
