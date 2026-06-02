@@ -9,6 +9,7 @@ const Controller = (() => {
     bindEvents();
     // AI fleet placed at startup so a quick Randomize on player side is enough.
     randomizeFleet(state.ai);
+    switchToBoard('player');
     refreshAll();
   }
 
