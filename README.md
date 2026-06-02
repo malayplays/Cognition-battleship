@@ -12,6 +12,18 @@ python3 -m http.server 8000
 
 Then visit http://localhost:8000.
 
+## Tests
+
+Unit tests cover the pure game logic (ship placement, firing, sink and win
+detection) using Node's built-in test runner — no dependencies or build step:
+
+```bash
+npm test
+```
+
+The tests load `js/state.js`, `js/board.js` and `js/ai.js` directly (see
+`tests/harness.js`); the game itself is unchanged.
+
 ## Deploy to GitHub Pages
 
 Push to `main` and enable Pages on the repo (Settings → Pages → Branch: `main`, Folder: `/`).
