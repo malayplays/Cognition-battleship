@@ -37,7 +37,7 @@ are listed.
 Broke standalone `require()` of `ai.js`.
 
 - **Severity:** Low
-- **Found via:** Writing AI unit tests — `test/ai.test.js` does
+- **Found via:** Writing AI unit tests — `tests/ai.test.js` does
   `require('../js/ai.js')` directly, without the shared browser scope that
   provides `BOARD_SIZE` from `state.js`.
 - **Root cause:** Original loop used the `BOARD_SIZE` constant defined in a
