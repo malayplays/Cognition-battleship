@@ -34,7 +34,7 @@ Push to `main` and enable Pages on the repo (Settings → Pages → Branch: `mai
 - `styles.css` — styling
 - `js/state.js` — central game state + fleet spec
 - `js/board.js` — board / ship / firing logic
-- `js/ai.js` — AI interface; Easy = random. Medium / Hard are placeholders.
+- `js/ai.js` — AI interface (Easy = random, Medium = hunt/target, Hard = hunt/target + parity lattice)
 - `js/render.js` — DOM rendering
 - `js/controller.js` — event wiring + turn loop
 - `js/main.js` — bootstrap
