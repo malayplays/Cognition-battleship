@@ -3,76 +3,214 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Battleship</title>
+  <title>Battleship — Pixel Naval Combat</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
-    href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&family=Inter:wght@400;500;600&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Pixelify+Sans:wght@400..700&family=Inter:wght@400;500;600&display=swap"
     rel="stylesheet"
   />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <header>
-    <h1>Battleship</h1>
-    <div class="controls">
-      <label>
-        Difficulty:
-        <select id="difficulty">
-          <option value="easy">Easy</option>
-          <option value="medium">Medium</option>
-          <option value="hard">Hard</option>
-        </select>
-      </label>
-    </div>
-  </header>
 
-  <main>
-    <section id="setup-panel" class="panel">
-      <h2>Place your fleet</h2>
-      <p id="placement-instructions">Click a cell on your board to place your next ship.</p>
-      <ul id="fleet-list"></ul>
+  <!-- ===== ANIMATED OCEAN BACKGROUND (all screens) ===== -->
+  <div id="ocean-bg" class="ocean-bg phase-menu">
+    <div class="bg-sky"></div>
+    <div class="bg-clouds">
+      <div class="cloud cloud-1"></div>
+      <div class="cloud cloud-2"></div>
+      <div class="cloud cloud-3"></div>
+      <div class="cloud cloud-4"></div>
+      <div class="cloud cloud-5"></div>
+    </div>
+    <div class="bg-islands">
+      <div class="island island-1"></div>
+      <div class="island island-2"></div>
+    </div>
+    <div class="bg-ocean"></div>
+    <div class="bg-waves">
+      <div class="wave wave-1"></div>
+      <div class="wave wave-2"></div>
+      <div class="wave wave-3"></div>
+    </div>
+    <div class="bg-foam"></div>
+    <div class="bg-birds">
+      <div class="bird bird-1"></div>
+      <div class="bird bird-2"></div>
+      <div class="bird bird-3"></div>
+    </div>
+    <div class="bg-ship-idle">
+      <div class="idle-ship"></div>
+    </div>
+    <div class="bg-foreground"></div>
+  </div>
+
+  <!-- ===== HOME / START SCREEN ===== -->
+  <div id="home-screen" class="screen active">
+    <div class="home-content">
+      <div class="game-title">
+        <div class="title-anchor">&#9875;</div>
+        <h1 class="pixel-title">NAVAL<br/>BATTLE</h1>
+        <p class="title-sub">Pixel Combat at Sea</p>
+      </div>
+      <nav class="home-menu">
+        <button class="pixel-btn pixel-btn-primary" id="home-play-btn">
+          <span class="btn-icon">&#9881;</span> Play Game
+        </button>
+        <button class="pixel-btn" id="home-howto-btn">
+          <span class="btn-icon">&#10067;</span> How to Play
+        </button>
+        <button class="pixel-btn" id="home-settings-btn">
+          <span class="btn-icon">&#9881;</span> Settings
+        </button>
+      </nav>
+      <div class="home-footer">
+        <span class="pixel-text-sm">A Pixel Art Battleship Game</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== HOW TO PLAY MODAL ===== -->
+  <div id="howto-modal" class="modal hidden">
+    <div class="pixel-panel modal-content howto-panel">
+      <h2 class="pixel-heading">How to Play</h2>
+      <div class="howto-body">
+        <div class="howto-step">
+          <span class="step-num">1</span>
+          <p>Place your fleet on the grid. Click cells to position ships. Use <strong>Rotate</strong> to switch orientation.</p>
+        </div>
+        <div class="howto-step">
+          <span class="step-num">2</span>
+          <p>Once all ships are placed, press <strong>Start Game</strong> to begin the battle!</p>
+        </div>
+        <div class="howto-step">
+          <span class="step-num">3</span>
+          <p>Take turns firing at the enemy grid. <span class="text-hit">Red = Hit</span>, <span class="text-miss">Gray = Miss</span>.</p>
+        </div>
+        <div class="howto-step">
+          <span class="step-num">4</span>
+          <p>Sink all enemy ships to win! The AI will fire back, so protect your fleet.</p>
+        </div>
+      </div>
+      <button class="pixel-btn pixel-btn-primary" id="howto-close-btn">Got It!</button>
+    </div>
+  </div>
+
+  <!-- ===== SETTINGS MODAL ===== -->
+  <div id="settings-modal" class="modal hidden">
+    <div class="pixel-panel modal-content settings-panel">
+      <h2 class="pixel-heading">Settings</h2>
+      <div class="settings-body">
+        <label class="pixel-label">
+          <span>Difficulty</span>
+          <select id="difficulty" class="pixel-select">
+            <option value="easy">Easy</option>
+            <option value="medium">Medium</option>
+            <option value="hard">Hard</option>
+          </select>
+        </label>
+      </div>
+      <button class="pixel-btn pixel-btn-primary" id="settings-close-btn">Done</button>
+    </div>
+  </div>
+
+  <!-- ===== GAME SCREEN ===== -->
+  <div id="game-screen" class="screen">
+    <!-- Top bar -->
+    <header class="game-header">
+      <div class="header-left">
+        <button class="pixel-btn pixel-btn-sm" id="back-to-menu-btn" title="Back to Menu">&#9664; Menu</button>
+      </div>
+      <div class="header-center">
+        <div id="turn-indicator" class="turn-indicator">Setup Phase</div>
+      </div>
+      <div class="header-right">
+        <button class="pixel-btn pixel-btn-sm" id="game-settings-btn" title="Settings">&#9881;</button>
+      </div>
+    </header>
+
+    <!-- Setup panel -->
+    <section id="setup-panel" class="pixel-panel setup-panel">
+      <h2 class="pixel-heading setup-heading">Place Your Fleet</h2>
+      <p id="placement-instructions" class="setup-instructions">Click a cell to place your next ship.</p>
+      <ul id="fleet-list" class="fleet-list"></ul>
       <div class="setup-buttons">
-        <button id="rotate-btn">Rotate: Horizontal</button>
-        <button id="randomize-btn">Randomize</button>
-        <button id="clear-btn">Clear</button>
-        <button id="start-btn" disabled>Start Game</button>
+        <button id="rotate-btn" class="pixel-btn"><span class="btn-icon">&#8634;</span> Horizontal</button>
+        <button id="randomize-btn" class="pixel-btn"><span class="btn-icon">&#127922;</span> Random</button>
+        <button id="clear-btn" class="pixel-btn"><span class="btn-icon">&#10006;</span> Clear</button>
+        <button id="start-btn" class="pixel-btn pixel-btn-primary" disabled>
+          <span class="btn-icon">&#9876;</span> Battle!
+        </button>
       </div>
     </section>
 
+    <!-- Boards -->
     <section class="boards">
       <div class="board-toggle" id="board-toggle">
-        <button class="active" data-target="player">Your Fleet</button>
-        <button data-target="ai">Enemy Waters</button>
+        <button class="active" data-target="player">&#9875; Your Fleet</button>
+        <button data-target="ai">&#127946; Enemy Waters</button>
       </div>
-      <div class="board-wrapper" id="player-wrapper">
-        <h3>Your Fleet</h3>
-        <div id="player-board" class="board" data-owner="player"></div>
-      </div>
-      <div class="board-wrapper" id="ai-wrapper">
-        <h3>Enemy Waters</h3>
-        <div id="ai-board" class="board" data-owner="ai"></div>
+      <div class="board-container">
+        <div class="board-wrapper" id="player-wrapper">
+          <h3 class="board-label">&#9875; Your Fleet</h3>
+          <div class="board-frame">
+            <div id="player-board" class="board pixel-board" data-owner="player"></div>
+          </div>
+        </div>
+        <div class="board-wrapper" id="ai-wrapper">
+          <h3 class="board-label">&#127946; Enemy Waters</h3>
+          <div class="board-frame">
+            <div id="ai-board" class="board pixel-board" data-owner="ai"></div>
+          </div>
+        </div>
       </div>
     </section>
 
-    <section id="status-bar" class="panel">
-      <div id="turn-indicator">Setup phase</div>
-      <div id="message-log"></div>
+    <!-- Status bar & battle log -->
+    <section id="status-bar" class="pixel-panel status-panel">
+      <div class="status-row">
+        <div class="ship-status-panel" id="player-ship-status">
+          <h4 class="pixel-text-sm">Your Fleet</h4>
+          <div id="player-fleet-status" class="fleet-status-icons"></div>
+        </div>
+        <div class="ship-status-panel" id="ai-ship-status">
+          <h4 class="pixel-text-sm">Enemy Fleet</h4>
+          <div id="ai-fleet-status" class="fleet-status-icons"></div>
+        </div>
+      </div>
+      <div id="message-log" class="battle-log"></div>
     </section>
-  </main>
+  </div>
 
+  <!-- ===== ATTACK ANIMATION OVERLAY ===== -->
+  <div id="attack-overlay" class="attack-overlay hidden">
+    <div class="projectile"></div>
+    <div class="attack-result-text"></div>
+  </div>
+
+  <!-- ===== GAME OVER MODAL ===== -->
   <div id="end-modal" class="modal hidden">
-    <div class="modal-content">
-      <h2 id="end-title"></h2>
-      <p id="end-message"></p>
-      <button id="play-again-btn">Play Again</button>
+    <div class="pixel-panel modal-content end-panel">
+      <div class="end-decoration" id="end-decoration"></div>
+      <h2 id="end-title" class="pixel-heading end-title"></h2>
+      <p id="end-message" class="end-message"></p>
+      <div class="end-stats" id="end-stats"></div>
+      <button id="play-again-btn" class="pixel-btn pixel-btn-primary">Play Again</button>
+      <button id="end-menu-btn" class="pixel-btn">Main Menu</button>
     </div>
+  </div>
+
+  <!-- ===== BANNER OVERLAY (e.g. "SHIP SUNK!") ===== -->
+  <div id="banner-overlay" class="banner-overlay hidden">
+    <div class="banner-text" id="banner-text"></div>
   </div>
 
   <script src="js/state.js"></script>
   <script src="js/board.js"></script>
   <script src="js/ai.js"></script>
   <script src="js/render.js"></script>
+  <script src="js/effects.js"></script>
   <script src="js/controller.js"></script>
   <script src="js/main.js"></script>
 </body>
