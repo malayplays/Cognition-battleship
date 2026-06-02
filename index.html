@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Battleship</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <h1>Battleship</h1>
+    <div class="controls">
+      <label>
+        Difficulty:
+        <select id="difficulty">
+          <option value="easy">Easy</option>
+          <option value="medium" disabled>Medium (coming soon)</option>
+          <option value="hard" disabled>Hard (coming soon)</option>
+        </select>
+      </label>
+    </div>
+  </header>
+
+  <main>
+    <section id="setup-panel" class="panel">
+      <h2>Place your fleet</h2>
+      <p id="placement-instructions">Click a cell on your board to place your next ship.</p>
+      <ul id="fleet-list"></ul>
+      <div class="setup-buttons">
+        <button id="rotate-btn">Rotate: Horizontal</button>
+        <button id="randomize-btn">Randomize</button>
+        <button id="clear-btn">Clear</button>
+        <button id="start-btn" disabled>Start Game</button>
+      </div>
+    </section>
+
+    <section class="boards">
+      <div class="board-wrapper">
+        <h3>Your Fleet</h3>
+        <div id="player-board" class="board" data-owner="player"></div>
+      </div>
+      <div class="board-wrapper">
+        <h3>Enemy Waters</h3>
+        <div id="ai-board" class="board" data-owner="ai"></div>
+      </div>
+    </section>
+
+    <section id="status-bar" class="panel">
+      <div id="turn-indicator">Setup phase</div>
+      <div id="message-log"></div>
+    </section>
+  </main>
+
+  <div id="end-modal" class="modal hidden">
+    <div class="modal-content">
+      <h2 id="end-title"></h2>
+      <p id="end-message"></p>
+      <button id="play-again-btn">Play Again</button>
+    </div>
+  </div>
+
+  <script src="js/state.js"></script>
+  <script src="js/board.js"></script>
+  <script src="js/ai.js"></script>
+  <script src="js/render.js"></script>
+  <script src="js/controller.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
