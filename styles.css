@@ -1575,37 +1575,79 @@ body {
 
 .ship-overlay.ship-carrier.ship-orient-H {
   background:
-    repeating-linear-gradient(90deg,
-      transparent 0px, transparent 8px,
-      rgba(255,255,255,0.06) 8px, rgba(255,255,255,0.06) 9px),
-    radial-gradient(ellipse 8% 55% at 72% 12%, #37474F 0%, #263238 65%, transparent 68%),
+    /* Flight deck centerline */
     linear-gradient(180deg,
-      transparent 8%, #263238 10%, #455A64 16%, #607D8B 24%,
-      #78909C 32%, #78909C 52%, #607D8B 60%,
-      #546E7A 68%, #455A64 76%, #37474F 84%, #263238 90%, transparent 92%);
+      transparent 46%, rgba(255,255,255,0.14) 48%, rgba(255,255,255,0.14) 52%, transparent 54%),
+    /* Angled deck landing area line */
+    linear-gradient(162deg,
+      transparent 44%, rgba(255,255,255,0.09) 46%, rgba(255,255,255,0.09) 47.5%, transparent 49%),
+    /* Island antenna/mast */
+    radial-gradient(ellipse 1.2% 20% at 68% 8%, #0D1B2A 0%, #0D1B2A 42%, transparent 52%),
+    /* Island upper tower */
+    radial-gradient(ellipse 4.5% 20% at 68% 18%, #1B2838 0%, #1B2838 48%, #243342 64%, transparent 72%),
+    /* Island base/shadow */
+    radial-gradient(ellipse 6.5% 16% at 68% 28%, #2C3E50 0%, #2C3E50 52%, #37474F 74%, transparent 82%),
+    /* Forward elevator pad */
+    radial-gradient(ellipse 3% 14% at 18% 50%, rgba(38,50,56,0.45) 0%, rgba(38,50,56,0.15) 60%, transparent 100%),
+    /* Aft elevator pad */
+    radial-gradient(ellipse 3% 14% at 85% 50%, rgba(38,50,56,0.45) 0%, rgba(38,50,56,0.15) 60%, transparent 100%),
+    /* Forward deck catapult tracks */
+    linear-gradient(168deg, transparent 42%, rgba(100,120,140,0.12) 43.5%, transparent 45%),
+    linear-gradient(168deg, transparent 53%, rgba(100,120,140,0.12) 54.5%, transparent 56%),
+    /* Deck panel grid lines */
+    repeating-linear-gradient(90deg,
+      transparent 0px, transparent 14px,
+      rgba(0,0,0,0.05) 14px, rgba(0,0,0,0.05) 15px),
+    /* Hull body — flat-top flight deck */
+    linear-gradient(180deg,
+      #1A2A36 4%, #263238 7%, #37474F 11%, #4A6572 16%,
+      #5C7A8A 22%, #6B8A98 28%, #78909C 35%, #8396A3 42%,
+      #8396A3 58%, #78909C 65%, #6B8A98 72%,
+      #5C7A8A 78%, #4A6572 84%, #37474F 89%, #263238 93%, #1A2A36 96%);
   clip-path: polygon(
-    0% 50%, 1.5% 35%, 3% 22%, 5% 14%, 8% 8%,
-    93% 8%, 96% 14%, 98% 22%, 100% 35%, 100% 65%,
-    98% 78%, 96% 86%, 93% 92%,
-    8% 92%, 5% 86%, 3% 78%, 1.5% 65%
+    0% 50%, 0.6% 34%, 1.5% 22%, 3% 14%, 5% 9%, 8% 7%,
+    92% 7%, 95% 9%, 97% 14%, 98.5% 22%, 99.4% 34%, 100% 50%,
+    99.4% 66%, 98.5% 78%, 97% 86%, 95% 91%, 92% 93%,
+    8% 93%, 5% 91%, 3% 86%, 1.5% 78%, 0.6% 66%
   );
 }
 
 .ship-overlay.ship-carrier.ship-orient-V {
   background:
-    repeating-linear-gradient(180deg,
-      transparent 0px, transparent 8px,
-      rgba(255,255,255,0.06) 8px, rgba(255,255,255,0.06) 9px),
-    radial-gradient(ellipse 55% 8% at 12% 72%, #37474F 0%, #263238 65%, transparent 68%),
+    /* Flight deck centerline */
     linear-gradient(90deg,
-      transparent 8%, #263238 10%, #455A64 16%, #607D8B 24%,
-      #78909C 32%, #78909C 52%, #607D8B 60%,
-      #546E7A 68%, #455A64 76%, #37474F 84%, #263238 90%, transparent 92%);
+      transparent 46%, rgba(255,255,255,0.14) 48%, rgba(255,255,255,0.14) 52%, transparent 54%),
+    /* Angled deck landing area line */
+    linear-gradient(108deg,
+      transparent 44%, rgba(255,255,255,0.09) 46%, rgba(255,255,255,0.09) 47.5%, transparent 49%),
+    /* Island antenna/mast */
+    radial-gradient(ellipse 20% 1.2% at 8% 68%, #0D1B2A 0%, #0D1B2A 42%, transparent 52%),
+    /* Island upper tower */
+    radial-gradient(ellipse 20% 4.5% at 18% 68%, #1B2838 0%, #1B2838 48%, #243342 64%, transparent 72%),
+    /* Island base/shadow */
+    radial-gradient(ellipse 16% 6.5% at 28% 68%, #2C3E50 0%, #2C3E50 52%, #37474F 74%, transparent 82%),
+    /* Forward elevator pad */
+    radial-gradient(ellipse 14% 3% at 50% 18%, rgba(38,50,56,0.45) 0%, rgba(38,50,56,0.15) 60%, transparent 100%),
+    /* Aft elevator pad */
+    radial-gradient(ellipse 14% 3% at 50% 85%, rgba(38,50,56,0.45) 0%, rgba(38,50,56,0.15) 60%, transparent 100%),
+    /* Forward deck catapult tracks */
+    linear-gradient(102deg, transparent 42%, rgba(100,120,140,0.12) 43.5%, transparent 45%),
+    linear-gradient(102deg, transparent 53%, rgba(100,120,140,0.12) 54.5%, transparent 56%),
+    /* Deck panel grid lines */
+    repeating-linear-gradient(180deg,
+      transparent 0px, transparent 14px,
+      rgba(0,0,0,0.05) 14px, rgba(0,0,0,0.05) 15px),
+    /* Hull body — flat-top flight deck */
+    linear-gradient(90deg,
+      #1A2A36 4%, #263238 7%, #37474F 11%, #4A6572 16%,
+      #5C7A8A 22%, #6B8A98 28%, #78909C 35%, #8396A3 42%,
+      #8396A3 58%, #78909C 65%, #6B8A98 72%,
+      #5C7A8A 78%, #4A6572 84%, #37474F 89%, #263238 93%, #1A2A36 96%);
   clip-path: polygon(
-    50% 0%, 35% 1.5%, 22% 3%, 14% 5%, 8% 8%,
-    8% 93%, 14% 96%, 22% 98%, 35% 100%, 65% 100%,
-    78% 98%, 86% 96%, 92% 93%,
-    92% 8%, 86% 5%, 78% 3%, 65% 1.5%
+    50% 0%, 34% 0.6%, 22% 1.5%, 14% 3%, 9% 5%, 7% 8%,
+    7% 92%, 9% 95%, 14% 97%, 22% 98.5%, 34% 99.4%, 50% 100%,
+    66% 99.4%, 78% 98.5%, 86% 97%, 91% 95%, 93% 92%,
+    93% 8%, 91% 5%, 86% 3%, 78% 1.5%, 66% 0.6%
   );
 }
 
@@ -1613,37 +1655,87 @@ body {
 
 .ship-overlay.ship-battleship.ship-orient-H {
   background:
-    radial-gradient(ellipse 10% 40% at 22% 14%, #546E7A 0%, #455A64 60%, transparent 65%),
-    radial-gradient(ellipse 8% 52% at 50% 8%, #455A64 0%, #37474F 60%, transparent 65%),
-    radial-gradient(ellipse 10% 35% at 78% 16%, #546E7A 0%, #455A64 60%, transparent 65%),
-    linear-gradient(180deg, transparent 49%, rgba(38,50,56,0.3) 49.5%, rgba(38,50,56,0.3) 50.5%, transparent 51%),
+    /* Forward turret 1 — gun barrels extending toward bow */
+    radial-gradient(ellipse 5% 4% at 14% 50%, #0D1B2A 0%, #0D1B2A 38%, transparent 48%),
+    /* Forward turret 1 — turret body */
+    radial-gradient(ellipse 5% 18% at 20% 50%, #1B2838 0%, #1B2838 42%, #263238 58%, #2C3E50 72%, transparent 80%),
+    /* Forward turret 2 — gun barrels */
+    radial-gradient(ellipse 5% 4% at 27% 50%, #0D1B2A 0%, #0D1B2A 38%, transparent 48%),
+    /* Forward turret 2 — turret body */
+    radial-gradient(ellipse 5% 18% at 33% 50%, #1B2838 0%, #1B2838 42%, #263238 58%, #2C3E50 72%, transparent 80%),
+    /* Bridge mast/antenna */
+    radial-gradient(ellipse 1% 28% at 50% 6%, #0D1B2A 0%, #0D1B2A 38%, transparent 48%),
+    /* Bridge upper structure */
+    radial-gradient(ellipse 5% 22% at 50% 22%, #1B2838 0%, #1B2838 44%, #243342 60%, transparent 70%),
+    /* Bridge lower base */
+    radial-gradient(ellipse 8% 26% at 50% 40%, #2C3E50 0%, #2C3E50 42%, #37474F 62%, transparent 74%),
+    /* Funnel/smokestack */
+    radial-gradient(ellipse 2.5% 16% at 56% 20%, #1B2838 0%, #1B2838 50%, transparent 60%),
+    /* Aft turret 1 — turret body */
+    radial-gradient(ellipse 5% 18% at 67% 50%, #1B2838 0%, #1B2838 42%, #263238 58%, #2C3E50 72%, transparent 80%),
+    /* Aft turret 1 — gun barrels */
+    radial-gradient(ellipse 5% 4% at 73% 50%, #0D1B2A 0%, #0D1B2A 38%, transparent 48%),
+    /* Aft turret 2 — turret body */
+    radial-gradient(ellipse 5% 18% at 80% 50%, #1B2838 0%, #1B2838 42%, #263238 58%, #2C3E50 72%, transparent 80%),
+    /* Aft turret 2 — gun barrels */
+    radial-gradient(ellipse 5% 4% at 86% 50%, #0D1B2A 0%, #0D1B2A 38%, transparent 48%),
+    /* Hull keel line */
     linear-gradient(180deg,
-      transparent 6%, #1A237E 8%, #263238 12%, #37474F 18%,
-      #455A64 24%, #546E7A 32%, #607D8B 40%, #607D8B 56%,
-      #546E7A 64%, #455A64 72%, #37474F 80%, #263238 88%, transparent 92%);
+      transparent 47%, rgba(0,0,0,0.1) 49%, rgba(0,0,0,0.1) 51%, transparent 53%),
+    /* Hull body — heavy warship */
+    linear-gradient(180deg,
+      #1A2530 4%, #263238 7%, #2C3E50 11%, #37474F 16%,
+      #455A64 22%, #546E7A 30%, #607D8B 38%, #6B8090 44%,
+      #6B8090 56%, #607D8B 62%, #546E7A 70%,
+      #455A64 78%, #37474F 84%, #2C3E50 89%, #263238 93%, #1A2530 96%);
   clip-path: polygon(
-    0% 50%, 2.5% 30%, 5% 18%, 9% 10%, 14% 6%,
-    88% 6%, 93% 12%, 97% 22%, 100% 35%, 100% 65%,
-    97% 78%, 93% 88%, 88% 94%,
-    14% 94%, 9% 90%, 5% 82%, 2.5% 70%
+    0% 50%, 1.5% 32%, 4% 18%, 7% 10%, 12% 6%,
+    90% 6%, 94% 10%, 97% 20%, 99% 34%, 100% 50%,
+    99% 66%, 97% 80%, 94% 90%, 90% 94%,
+    12% 94%, 7% 90%, 4% 82%, 1.5% 68%
   );
 }
 
 .ship-overlay.ship-battleship.ship-orient-V {
   background:
-    radial-gradient(ellipse 40% 10% at 14% 22%, #546E7A 0%, #455A64 60%, transparent 65%),
-    radial-gradient(ellipse 52% 8% at 8% 50%, #455A64 0%, #37474F 60%, transparent 65%),
-    radial-gradient(ellipse 35% 10% at 16% 78%, #546E7A 0%, #455A64 60%, transparent 65%),
-    linear-gradient(90deg, transparent 49%, rgba(38,50,56,0.3) 49.5%, rgba(38,50,56,0.3) 50.5%, transparent 51%),
+    /* Forward turret 1 — gun barrels extending toward bow */
+    radial-gradient(ellipse 4% 5% at 50% 14%, #0D1B2A 0%, #0D1B2A 38%, transparent 48%),
+    /* Forward turret 1 — turret body */
+    radial-gradient(ellipse 18% 5% at 50% 20%, #1B2838 0%, #1B2838 42%, #263238 58%, #2C3E50 72%, transparent 80%),
+    /* Forward turret 2 — gun barrels */
+    radial-gradient(ellipse 4% 5% at 50% 27%, #0D1B2A 0%, #0D1B2A 38%, transparent 48%),
+    /* Forward turret 2 — turret body */
+    radial-gradient(ellipse 18% 5% at 50% 33%, #1B2838 0%, #1B2838 42%, #263238 58%, #2C3E50 72%, transparent 80%),
+    /* Bridge mast/antenna */
+    radial-gradient(ellipse 28% 1% at 6% 50%, #0D1B2A 0%, #0D1B2A 38%, transparent 48%),
+    /* Bridge upper structure */
+    radial-gradient(ellipse 22% 5% at 22% 50%, #1B2838 0%, #1B2838 44%, #243342 60%, transparent 70%),
+    /* Bridge lower base */
+    radial-gradient(ellipse 26% 8% at 40% 50%, #2C3E50 0%, #2C3E50 42%, #37474F 62%, transparent 74%),
+    /* Funnel/smokestack */
+    radial-gradient(ellipse 16% 2.5% at 20% 56%, #1B2838 0%, #1B2838 50%, transparent 60%),
+    /* Aft turret 1 — turret body */
+    radial-gradient(ellipse 18% 5% at 50% 67%, #1B2838 0%, #1B2838 42%, #263238 58%, #2C3E50 72%, transparent 80%),
+    /* Aft turret 1 — gun barrels */
+    radial-gradient(ellipse 4% 5% at 50% 73%, #0D1B2A 0%, #0D1B2A 38%, transparent 48%),
+    /* Aft turret 2 — turret body */
+    radial-gradient(ellipse 18% 5% at 50% 80%, #1B2838 0%, #1B2838 42%, #263238 58%, #2C3E50 72%, transparent 80%),
+    /* Aft turret 2 — gun barrels */
+    radial-gradient(ellipse 4% 5% at 50% 86%, #0D1B2A 0%, #0D1B2A 38%, transparent 48%),
+    /* Hull keel line */
     linear-gradient(90deg,
-      transparent 6%, #1A237E 8%, #263238 12%, #37474F 18%,
-      #455A64 24%, #546E7A 32%, #607D8B 40%, #607D8B 56%,
-      #546E7A 64%, #455A64 72%, #37474F 80%, #263238 88%, transparent 92%);
+      transparent 47%, rgba(0,0,0,0.1) 49%, rgba(0,0,0,0.1) 51%, transparent 53%),
+    /* Hull body — heavy warship */
+    linear-gradient(90deg,
+      #1A2530 4%, #263238 7%, #2C3E50 11%, #37474F 16%,
+      #455A64 22%, #546E7A 30%, #607D8B 38%, #6B8090 44%,
+      #6B8090 56%, #607D8B 62%, #546E7A 70%,
+      #455A64 78%, #37474F 84%, #2C3E50 89%, #263238 93%, #1A2530 96%);
   clip-path: polygon(
-    50% 0%, 30% 2.5%, 18% 5%, 10% 9%, 6% 14%,
-    6% 88%, 12% 93%, 22% 97%, 35% 100%, 65% 100%,
-    78% 97%, 88% 93%, 94% 88%,
-    94% 14%, 90% 9%, 82% 5%, 70% 2.5%
+    50% 0%, 32% 1.5%, 18% 4%, 10% 7%, 6% 12%,
+    6% 90%, 10% 94%, 20% 97%, 34% 99%, 50% 100%,
+    66% 99%, 80% 97%, 90% 94%, 94% 90%,
+    94% 12%, 90% 7%, 82% 4%, 68% 1.5%
   );
 }
 
@@ -1651,33 +1743,67 @@ body {
 
 .ship-overlay.ship-cruiser.ship-orient-H {
   background:
-    radial-gradient(ellipse 14% 38% at 30% 14%, #546E7A 0%, #455A64 60%, transparent 65%),
-    radial-gradient(ellipse 10% 48% at 68% 8%, #455A64 0%, #37474F 60%, transparent 65%),
+    /* Forward turret — gun barrels */
+    radial-gradient(ellipse 6% 5% at 16% 50%, #0D1B2A 0%, #0D1B2A 36%, transparent 46%),
+    /* Forward turret — body */
+    radial-gradient(ellipse 7% 22% at 24% 50%, #1B2838 0%, #1B2838 40%, #263238 56%, #2C3E50 70%, transparent 78%),
+    /* Bridge mast */
+    radial-gradient(ellipse 1.5% 24% at 54% 8%, #0D1B2A 0%, #0D1B2A 40%, transparent 50%),
+    /* Bridge upper */
+    radial-gradient(ellipse 6% 20% at 54% 24%, #1B2838 0%, #1B2838 44%, #243342 60%, transparent 70%),
+    /* Bridge base */
+    radial-gradient(ellipse 9% 22% at 54% 40%, #2C3E50 0%, #2C3E50 42%, #37474F 62%, transparent 74%),
+    /* Aft turret — body */
+    radial-gradient(ellipse 7% 22% at 78% 50%, #1B2838 0%, #1B2838 40%, #263238 56%, #2C3E50 70%, transparent 78%),
+    /* Aft turret — gun barrels */
+    radial-gradient(ellipse 6% 5% at 84% 50%, #0D1B2A 0%, #0D1B2A 36%, transparent 46%),
+    /* Hull keel line */
     linear-gradient(180deg,
-      transparent 10%, #263238 12%, #37474F 18%, #455A64 24%,
-      #546E7A 30%, #607D8B 38%, #607D8B 56%,
-      #546E7A 64%, #455A64 72%, #37474F 80%, #263238 86%, transparent 90%);
+      transparent 47%, rgba(0,0,0,0.08) 49%, rgba(0,0,0,0.08) 51%, transparent 53%),
+    /* Hull body — medium warship */
+    linear-gradient(180deg,
+      #1A2A36 5%, #263238 8%, #37474F 13%, #455A64 19%,
+      #546E7A 26%, #607D8B 34%, #6B8A98 42%, #748F9E 48%,
+      #748F9E 52%, #6B8A98 58%, #607D8B 66%,
+      #546E7A 74%, #455A64 81%, #37474F 87%, #263238 92%, #1A2A36 95%);
   clip-path: polygon(
-    0% 50%, 3% 28%, 7% 16%, 12% 8%,
-    88% 8%, 93% 16%, 97% 28%, 100% 40%, 100% 60%,
-    97% 72%, 93% 84%, 88% 92%,
-    12% 92%, 7% 84%, 3% 72%
+    0% 50%, 2% 30%, 5% 18%, 9% 10%, 14% 7%,
+    88% 7%, 93% 12%, 96% 22%, 98.5% 34%, 100% 48%, 100% 52%,
+    98.5% 66%, 96% 78%, 93% 88%, 88% 93%,
+    14% 93%, 9% 90%, 5% 82%, 2% 70%
   );
 }
 
 .ship-overlay.ship-cruiser.ship-orient-V {
   background:
-    radial-gradient(ellipse 38% 14% at 14% 30%, #546E7A 0%, #455A64 60%, transparent 65%),
-    radial-gradient(ellipse 48% 10% at 8% 68%, #455A64 0%, #37474F 60%, transparent 65%),
+    /* Forward turret — gun barrels */
+    radial-gradient(ellipse 5% 6% at 50% 16%, #0D1B2A 0%, #0D1B2A 36%, transparent 46%),
+    /* Forward turret — body */
+    radial-gradient(ellipse 22% 7% at 50% 24%, #1B2838 0%, #1B2838 40%, #263238 56%, #2C3E50 70%, transparent 78%),
+    /* Bridge mast */
+    radial-gradient(ellipse 24% 1.5% at 8% 54%, #0D1B2A 0%, #0D1B2A 40%, transparent 50%),
+    /* Bridge upper */
+    radial-gradient(ellipse 20% 6% at 24% 54%, #1B2838 0%, #1B2838 44%, #243342 60%, transparent 70%),
+    /* Bridge base */
+    radial-gradient(ellipse 22% 9% at 40% 54%, #2C3E50 0%, #2C3E50 42%, #37474F 62%, transparent 74%),
+    /* Aft turret — body */
+    radial-gradient(ellipse 22% 7% at 50% 78%, #1B2838 0%, #1B2838 40%, #263238 56%, #2C3E50 70%, transparent 78%),
+    /* Aft turret — gun barrels */
+    radial-gradient(ellipse 5% 6% at 50% 84%, #0D1B2A 0%, #0D1B2A 36%, transparent 46%),
+    /* Hull keel line */
     linear-gradient(90deg,
-      transparent 10%, #263238 12%, #37474F 18%, #455A64 24%,
-      #546E7A 30%, #607D8B 38%, #607D8B 56%,
-      #546E7A 64%, #455A64 72%, #37474F 80%, #263238 86%, transparent 90%);
+      transparent 47%, rgba(0,0,0,0.08) 49%, rgba(0,0,0,0.08) 51%, transparent 53%),
+    /* Hull body — medium warship */
+    linear-gradient(90deg,
+      #1A2A36 5%, #263238 8%, #37474F 13%, #455A64 19%,
+      #546E7A 26%, #607D8B 34%, #6B8A98 42%, #748F9E 48%,
+      #748F9E 52%, #6B8A98 58%, #607D8B 66%,
+      #546E7A 74%, #455A64 81%, #37474F 87%, #263238 92%, #1A2A36 95%);
   clip-path: polygon(
-    50% 0%, 28% 3%, 16% 7%, 8% 12%,
-    8% 88%, 16% 93%, 28% 97%, 40% 100%, 60% 100%,
-    72% 97%, 84% 93%, 92% 88%,
-    92% 12%, 84% 7%, 72% 3%
+    50% 0%, 30% 2%, 18% 5%, 10% 9%, 7% 14%,
+    7% 88%, 12% 93%, 22% 96%, 34% 98.5%, 48% 100%, 52% 100%,
+    66% 98.5%, 78% 96%, 88% 93%, 93% 88%,
+    93% 14%, 90% 9%, 82% 5%, 70% 2%
   );
 }
 
@@ -1685,17 +1811,45 @@ body {
 
 .ship-overlay.ship-submarine.ship-orient-H {
   background:
-    radial-gradient(ellipse 10% 50% at 40% 18%, #455A64 0%, #37474F 55%, transparent 60%),
-    linear-gradient(180deg, transparent 49%, rgba(38,50,56,0.3) 49.5%, rgba(38,50,56,0.3) 50.5%, transparent 51%),
-    radial-gradient(ellipse 50% 44% at 50% 54%, #455A64 0%, #37474F 45%, #263238 70%, transparent 76%);
+    /* Periscope/antenna */
+    radial-gradient(ellipse 1% 18% at 38% 6%, #0D1B2A 0%, #0D1B2A 40%, transparent 52%),
+    /* Conning tower upper */
+    radial-gradient(ellipse 6% 20% at 38% 20%, #1B2838 0%, #1B2838 46%, #243342 62%, transparent 72%),
+    /* Conning tower base */
+    radial-gradient(ellipse 8% 16% at 38% 32%, #2C3E50 0%, #2C3E50 50%, #37474F 70%, transparent 80%),
+    /* Forward hull detail — torpedo tubes */
+    radial-gradient(ellipse 3% 6% at 8% 42%, rgba(13,27,42,0.4) 0%, transparent 100%),
+    radial-gradient(ellipse 3% 6% at 8% 58%, rgba(13,27,42,0.4) 0%, transparent 100%),
+    /* Hull waterline stripe */
+    linear-gradient(180deg,
+      transparent 46%, rgba(0,0,0,0.12) 48%, rgba(0,0,0,0.12) 52%, transparent 54%),
+    /* Deck hatch aft */
+    radial-gradient(ellipse 4% 10% at 65% 50%, rgba(27,40,56,0.35) 0%, transparent 100%),
+    /* Hull body — smooth submarine hull */
+    radial-gradient(ellipse 50% 44% at 50% 52%,
+      #455A64 0%, #3D5260 20%, #37474F 42%, #2C3E50 60%, #263238 74%, #1A2530 88%, transparent 94%);
   clip-path: ellipse(50% 42% at 50% 50%);
 }
 
 .ship-overlay.ship-submarine.ship-orient-V {
   background:
-    radial-gradient(ellipse 50% 10% at 18% 40%, #455A64 0%, #37474F 55%, transparent 60%),
-    linear-gradient(90deg, transparent 49%, rgba(38,50,56,0.3) 49.5%, rgba(38,50,56,0.3) 50.5%, transparent 51%),
-    radial-gradient(ellipse 44% 50% at 54% 50%, #455A64 0%, #37474F 45%, #263238 70%, transparent 76%);
+    /* Periscope/antenna */
+    radial-gradient(ellipse 18% 1% at 6% 38%, #0D1B2A 0%, #0D1B2A 40%, transparent 52%),
+    /* Conning tower upper */
+    radial-gradient(ellipse 20% 6% at 20% 38%, #1B2838 0%, #1B2838 46%, #243342 62%, transparent 72%),
+    /* Conning tower base */
+    radial-gradient(ellipse 16% 8% at 32% 38%, #2C3E50 0%, #2C3E50 50%, #37474F 70%, transparent 80%),
+    /* Forward hull detail — torpedo tubes */
+    radial-gradient(ellipse 6% 3% at 42% 8%, rgba(13,27,42,0.4) 0%, transparent 100%),
+    radial-gradient(ellipse 6% 3% at 58% 8%, rgba(13,27,42,0.4) 0%, transparent 100%),
+    /* Hull waterline stripe */
+    linear-gradient(90deg,
+      transparent 46%, rgba(0,0,0,0.12) 48%, rgba(0,0,0,0.12) 52%, transparent 54%),
+    /* Deck hatch aft */
+    radial-gradient(ellipse 10% 4% at 50% 65%, rgba(27,40,56,0.35) 0%, transparent 100%),
+    /* Hull body — smooth submarine hull */
+    radial-gradient(ellipse 44% 50% at 52% 50%,
+      #455A64 0%, #3D5260 20%, #37474F 42%, #2C3E50 60%, #263238 74%, #1A2530 88%, transparent 94%);
   clip-path: ellipse(42% 50% at 50% 50%);
 }
 
@@ -1703,33 +1857,63 @@ body {
 
 .ship-overlay.ship-destroyer.ship-orient-H {
   background:
-    radial-gradient(ellipse 16% 32% at 32% 16%, #546E7A 0%, #455A64 55%, transparent 60%),
-    radial-gradient(ellipse 12% 42% at 68% 10%, #455A64 0%, #37474F 55%, transparent 60%),
+    /* Forward gun — barrel */
+    radial-gradient(ellipse 8% 5% at 20% 50%, #0D1B2A 0%, #0D1B2A 36%, transparent 46%),
+    /* Forward gun — turret body */
+    radial-gradient(ellipse 8% 24% at 30% 50%, #1B2838 0%, #1B2838 40%, #263238 56%, #2C3E50 70%, transparent 78%),
+    /* Bridge mast */
+    radial-gradient(ellipse 2% 26% at 62% 8%, #0D1B2A 0%, #0D1B2A 38%, transparent 48%),
+    /* Bridge structure */
+    radial-gradient(ellipse 8% 22% at 62% 26%, #1B2838 0%, #1B2838 42%, #243342 58%, transparent 68%),
+    /* Bridge base */
+    radial-gradient(ellipse 10% 20% at 62% 40%, #2C3E50 0%, #2C3E50 44%, #37474F 64%, transparent 76%),
+    /* Aft depth charge rack */
+    radial-gradient(ellipse 5% 12% at 85% 50%, rgba(27,40,56,0.4) 0%, transparent 100%),
+    /* Hull keel line */
     linear-gradient(180deg,
-      transparent 12%, #263238 14%, #37474F 20%, #455A64 26%,
-      #546E7A 32%, #607D8B 40%, #607D8B 56%,
-      #546E7A 64%, #455A64 72%, #37474F 80%, #263238 86%, transparent 90%);
+      transparent 47%, rgba(0,0,0,0.08) 49%, rgba(0,0,0,0.08) 51%, transparent 53%),
+    /* Hull body — fast escort */
+    linear-gradient(180deg,
+      #1A2A36 6%, #263238 9%, #37474F 14%, #455A64 20%,
+      #546E7A 28%, #607D8B 36%, #6B8A98 44%, #78909C 50%,
+      #6B8A98 56%, #607D8B 64%,
+      #546E7A 72%, #455A64 80%, #37474F 86%, #263238 91%, #1A2A36 94%);
   clip-path: polygon(
-    0% 50%, 4% 26%, 10% 14%, 18% 6%,
-    84% 6%, 92% 14%, 97% 28%, 100% 42%, 100% 58%,
-    97% 72%, 92% 86%, 84% 94%,
-    18% 94%, 10% 86%, 4% 74%
+    0% 50%, 3% 28%, 8% 16%, 14% 8%, 22% 6%,
+    82% 6%, 90% 10%, 95% 20%, 98% 34%, 100% 48%, 100% 52%,
+    98% 66%, 95% 80%, 90% 90%, 82% 94%,
+    22% 94%, 14% 92%, 8% 84%, 3% 72%
   );
 }
 
 .ship-overlay.ship-destroyer.ship-orient-V {
   background:
-    radial-gradient(ellipse 32% 16% at 16% 32%, #546E7A 0%, #455A64 55%, transparent 60%),
-    radial-gradient(ellipse 42% 12% at 10% 68%, #455A64 0%, #37474F 55%, transparent 60%),
+    /* Forward gun — barrel */
+    radial-gradient(ellipse 5% 8% at 50% 20%, #0D1B2A 0%, #0D1B2A 36%, transparent 46%),
+    /* Forward gun — turret body */
+    radial-gradient(ellipse 24% 8% at 50% 30%, #1B2838 0%, #1B2838 40%, #263238 56%, #2C3E50 70%, transparent 78%),
+    /* Bridge mast */
+    radial-gradient(ellipse 26% 2% at 8% 62%, #0D1B2A 0%, #0D1B2A 38%, transparent 48%),
+    /* Bridge structure */
+    radial-gradient(ellipse 22% 8% at 26% 62%, #1B2838 0%, #1B2838 42%, #243342 58%, transparent 68%),
+    /* Bridge base */
+    radial-gradient(ellipse 20% 10% at 40% 62%, #2C3E50 0%, #2C3E50 44%, #37474F 64%, transparent 76%),
+    /* Aft depth charge rack */
+    radial-gradient(ellipse 12% 5% at 50% 85%, rgba(27,40,56,0.4) 0%, transparent 100%),
+    /* Hull keel line */
     linear-gradient(90deg,
-      transparent 12%, #263238 14%, #37474F 20%, #455A64 26%,
-      #546E7A 32%, #607D8B 40%, #607D8B 56%,
-      #546E7A 64%, #455A64 72%, #37474F 80%, #263238 86%, transparent 90%);
+      transparent 47%, rgba(0,0,0,0.08) 49%, rgba(0,0,0,0.08) 51%, transparent 53%),
+    /* Hull body — fast escort */
+    linear-gradient(90deg,
+      #1A2A36 6%, #263238 9%, #37474F 14%, #455A64 20%,
+      #546E7A 28%, #607D8B 36%, #6B8A98 44%, #78909C 50%,
+      #6B8A98 56%, #607D8B 64%,
+      #546E7A 72%, #455A64 80%, #37474F 86%, #263238 91%, #1A2A36 94%);
   clip-path: polygon(
-    50% 0%, 26% 4%, 14% 10%, 6% 18%,
-    6% 84%, 14% 92%, 28% 97%, 42% 100%, 58% 100%,
-    72% 97%, 86% 92%, 94% 84%,
-    94% 18%, 86% 10%, 74% 4%
+    50% 0%, 28% 3%, 16% 8%, 8% 14%, 6% 22%,
+    6% 82%, 10% 90%, 20% 95%, 34% 98%, 48% 100%, 52% 100%,
+    66% 98%, 80% 95%, 90% 90%, 94% 82%,
+    94% 22%, 92% 14%, 84% 8%, 72% 3%
   );
 }
 
