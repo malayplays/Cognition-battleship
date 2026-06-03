@@ -38,7 +38,7 @@
   --ship-deck:   #78909C;
   --ship-hull:   #37474F;
   --ship-preview:rgba(84,110,122,0.45);
-  --ship-opacity: 0.52;
+  --ship-opacity: 0.7;
   --sunk-wreck:  #263238;
   --water-overlay: rgba(30, 136, 229, 0.35);
   --ship-invalid:#EF5350;
@@ -459,18 +459,18 @@ body {
   pointer-events: none;
 }
 
-/* Seaweed */
+/* Seaweed — enlarged and diverse */
 .seaweed {
   position: absolute;
   bottom: 0;
-  width: 6px;
+  width: 14px;
   z-index: 9;
   pointer-events: none;
 }
 .seaweed-strand {
-  width: 4px;
+  width: 7px;
   background: #66BB6A;
-  border-radius: 50% 50% 0 0;
+  border-radius: 40% 60% 0 0;
   position: absolute;
   bottom: 0;
   animation: seaweed-sway 3s ease-in-out infinite;
@@ -479,45 +479,61 @@ body {
 .seaweed-strand:nth-child(2) {
   background: #43A047;
   animation-delay: -1s;
-  left: 3px;
+  left: 6px;
+  width: 6px;
 }
 .seaweed-strand:nth-child(3) {
   background: #81C784;
   animation-delay: -0.5s;
-  left: -2px;
+  left: -3px;
+  width: 5px;
 }
 
 .seaweed-1 { left: 8%; }
-.seaweed-1 .seaweed-strand:nth-child(1) { height: 28px; width: 4px; }
-.seaweed-1 .seaweed-strand:nth-child(2) { height: 20px; width: 3px; }
-.seaweed-1 .seaweed-strand:nth-child(3) { height: 24px; width: 3px; }
+.seaweed-1 .seaweed-strand:nth-child(1) { height: 55px; width: 7px; }
+.seaweed-1 .seaweed-strand:nth-child(2) { height: 42px; width: 6px; }
+.seaweed-1 .seaweed-strand:nth-child(3) { height: 48px; width: 5px; }
 
 .seaweed-2 { left: 30%; }
-.seaweed-2 .seaweed-strand:nth-child(1) { height: 22px; width: 3px; }
-.seaweed-2 .seaweed-strand:nth-child(2) { height: 30px; width: 4px; }
-.seaweed-2 .seaweed-strand:nth-child(3) { height: 18px; width: 3px; }
+.seaweed-2 .seaweed-strand:nth-child(1) { height: 45px; width: 6px; background: #2E7D32; }
+.seaweed-2 .seaweed-strand:nth-child(2) { height: 60px; width: 8px; background: #388E3C; }
+.seaweed-2 .seaweed-strand:nth-child(3) { height: 38px; width: 5px; background: #4CAF50; }
 
 .seaweed-3 { left: 55%; }
-.seaweed-3 .seaweed-strand:nth-child(1) { height: 26px; width: 4px; }
-.seaweed-3 .seaweed-strand:nth-child(2) { height: 18px; width: 3px; }
+.seaweed-3 .seaweed-strand:nth-child(1) { height: 52px; width: 7px; background: #009688; }
+.seaweed-3 .seaweed-strand:nth-child(2) { height: 40px; width: 6px; background: #00897B; }
 
 .seaweed-4 { left: 78%; }
-.seaweed-4 .seaweed-strand:nth-child(1) { height: 20px; width: 3px; }
-.seaweed-4 .seaweed-strand:nth-child(2) { height: 28px; width: 4px; }
-.seaweed-4 .seaweed-strand:nth-child(3) { height: 16px; width: 3px; }
+.seaweed-4 .seaweed-strand:nth-child(1) { height: 42px; width: 6px; }
+.seaweed-4 .seaweed-strand:nth-child(2) { height: 58px; width: 8px; }
+.seaweed-4 .seaweed-strand:nth-child(3) { height: 35px; width: 5px; }
 
 .seaweed-5 { left: 92%; }
-.seaweed-5 .seaweed-strand:nth-child(1) { height: 24px; width: 4px; }
-.seaweed-5 .seaweed-strand:nth-child(2) { height: 16px; width: 3px; }
+.seaweed-5 .seaweed-strand:nth-child(1) { height: 50px; width: 7px; background: #1B5E20; }
+.seaweed-5 .seaweed-strand:nth-child(2) { height: 38px; width: 6px; background: #2E7D32; }
 
 .seaweed-6 { left: 42%; }
-.seaweed-6 .seaweed-strand:nth-child(1) { height: 22px; width: 3px; }
-.seaweed-6 .seaweed-strand:nth-child(2) { height: 30px; width: 4px; }
-.seaweed-6 .seaweed-strand:nth-child(3) { height: 18px; width: 3px; }
+.seaweed-6 .seaweed-strand:nth-child(1) { height: 46px; width: 6px; background: #00695C; }
+.seaweed-6 .seaweed-strand:nth-child(2) { height: 62px; width: 8px; background: #00796B; }
+.seaweed-6 .seaweed-strand:nth-child(3) { height: 38px; width: 5px; background: #009688; }
 
 .seaweed-7 { left: 68%; }
-.seaweed-7 .seaweed-strand:nth-child(1) { height: 20px; width: 3px; }
-.seaweed-7 .seaweed-strand:nth-child(2) { height: 26px; width: 4px; }
+.seaweed-7 .seaweed-strand:nth-child(1) { height: 44px; width: 7px; }
+.seaweed-7 .seaweed-strand:nth-child(2) { height: 55px; width: 8px; }
+
+.seaweed-8 { left: 18%; }
+.seaweed-8 .seaweed-strand:nth-child(1) { height: 50px; width: 7px; background: #388E3C; }
+.seaweed-8 .seaweed-strand:nth-child(2) { height: 65px; width: 9px; background: #2E7D32; }
+.seaweed-8 .seaweed-strand:nth-child(3) { height: 42px; width: 6px; background: #4CAF50; }
+
+.seaweed-9 { left: 85%; }
+.seaweed-9 .seaweed-strand:nth-child(1) { height: 48px; width: 7px; background: #00897B; }
+.seaweed-9 .seaweed-strand:nth-child(2) { height: 58px; width: 8px; background: #009688; }
+
+.seaweed-10 { left: 50%; }
+.seaweed-10 .seaweed-strand:nth-child(1) { height: 55px; width: 8px; background: #1B5E20; }
+.seaweed-10 .seaweed-strand:nth-child(2) { height: 42px; width: 6px; background: #43A047; }
+.seaweed-10 .seaweed-strand:nth-child(3) { height: 60px; width: 9px; background: #2E7D32; }
 
 @keyframes seaweed-sway {
   0%, 100% { transform: rotate(-5deg); }
@@ -541,49 +557,50 @@ body {
   pointer-events: none;
 }
 
-/* Fish body via CSS */
+/* Fish body via CSS — enlarged */
 .fish-body {
-  width: 14px;
-  height: 8px;
+  width: 28px;
+  height: 14px;
   border-radius: 50% 30% 30% 50%;
   position: relative;
 }
 .fish-body::before {
   content: '';
   position: absolute;
-  right: -5px;
-  top: 1px;
+  right: -10px;
+  top: 2px;
   width: 0;
   height: 0;
-  border-top: 3px solid transparent;
-  border-bottom: 3px solid transparent;
-  border-left: 6px solid;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-left: 11px solid;
   border-left-color: inherit;
 }
 .fish-body::after {
   content: '';
   position: absolute;
-  left: 3px;
-  top: 2px;
-  width: 2px;
-  height: 2px;
+  left: 5px;
+  top: 4px;
+  width: 4px;
+  height: 4px;
   background: #263238;
   border-radius: 50%;
 }
 
+/* Diverse fish — different sizes, shapes, colors */
 .fish-1 {
   bottom: 65%;
   animation: fish-swim 18s linear infinite;
   animation-delay: 0s;
 }
-.fish-1 .fish-body { background: #FF8A65; border-left-color: #FF8A65; width: 14px; height: 8px; }
+.fish-1 .fish-body { background: #FF8A65; border-left-color: #FF8A65; width: 30px; height: 16px; }
 
 .fish-2 {
   bottom: 45%;
   animation: fish-swim 22s linear infinite;
   animation-delay: -7s;
 }
-.fish-2 .fish-body { background: #4DD0E1; border-left-color: #4DD0E1; width: 12px; height: 7px; }
+.fish-2 .fish-body { background: #4DD0E1; border-left-color: #4DD0E1; width: 24px; height: 12px; }
 
 .fish-3 {
   bottom: 80%;
@@ -591,8 +608,9 @@ body {
   animation-delay: -3s;
 }
 .fish-3 .fish-body {
-  background: #FFD54F; border-left-color: #FFD54F; width: 10px; height: 6px;
+  background: #FFD54F; border-left-color: #FFD54F; width: 20px; height: 11px;
   transform: scaleX(-1);
+  border-radius: 40% 50% 50% 40%;
 }
 
 .fish-4 {
@@ -600,7 +618,10 @@ body {
   animation: fish-swim 25s linear infinite;
   animation-delay: -12s;
 }
-.fish-4 .fish-body { background: #CE93D8; border-left-color: #CE93D8; width: 11px; height: 6px; }
+.fish-4 .fish-body {
+  background: #CE93D8; border-left-color: #CE93D8; width: 34px; height: 14px;
+  border-radius: 60% 20% 20% 60%;
+}
 
 .fish-5 {
   bottom: 55%;
@@ -608,7 +629,7 @@ body {
   animation-delay: -5s;
 }
 .fish-5 .fish-body {
-  background: #A5D6A7; border-left-color: #A5D6A7; width: 13px; height: 7px;
+  background: #A5D6A7; border-left-color: #A5D6A7; width: 26px; height: 14px;
   transform: scaleX(-1);
 }
 
@@ -617,7 +638,10 @@ body {
   animation: fish-swim 30s linear infinite;
   animation-delay: -18s;
 }
-.fish-6 .fish-body { background: #80DEEA; border-left-color: #80DEEA; width: 10px; height: 5px; }
+.fish-6 .fish-body {
+  background: #80DEEA; border-left-color: #80DEEA; width: 22px; height: 10px;
+  border-radius: 45% 35% 35% 45%;
+}
 
 .fish-7 {
   bottom: 25%;
@@ -625,8 +649,9 @@ body {
   animation-delay: -9s;
 }
 .fish-7 .fish-body {
-  background: #FFAB91; border-left-color: #FFAB91; width: 15px; height: 8px;
+  background: #FFAB91; border-left-color: #FFAB91; width: 32px; height: 16px;
   transform: scaleX(-1);
+  border-radius: 55% 25% 25% 55%;
 }
 
 .fish-8 {
@@ -634,22 +659,66 @@ body {
   animation: fish-swim 28s linear infinite;
   animation-delay: -14s;
 }
-.fish-8 .fish-body { background: #B39DDB; border-left-color: #B39DDB; width: 9px; height: 5px; }
+.fish-8 .fish-body {
+  background: #B39DDB; border-left-color: #B39DDB; width: 18px; height: 10px;
+  border-radius: 50% 30% 30% 50%;
+}
+
+.fish-9 {
+  bottom: 40%;
+  animation: fish-swim 15s linear infinite;
+  animation-delay: -2s;
+}
+.fish-9 .fish-body {
+  background: #EF5350; border-left-color: #EF5350; width: 36px; height: 18px;
+  border-radius: 55% 25% 25% 55%;
+}
+
+.fish-10 {
+  bottom: 75%;
+  animation: fish-swim-reverse 19s linear infinite;
+  animation-delay: -11s;
+}
+.fish-10 .fish-body {
+  background: #26C6DA; border-left-color: #26C6DA; width: 22px; height: 12px;
+  transform: scaleX(-1);
+}
+
+.fish-11 {
+  bottom: 50%;
+  animation: fish-swim 32s linear infinite;
+  animation-delay: -20s;
+}
+.fish-11 .fish-body {
+  background: #FFA726; border-left-color: #FFA726; width: 28px; height: 14px;
+  border-radius: 45% 35% 35% 45%;
+}
+
+.fish-12 {
+  bottom: 20%;
+  animation: fish-swim-reverse 26s linear infinite;
+  animation-delay: -6s;
+}
+.fish-12 .fish-body {
+  background: #66BB6A; border-left-color: #66BB6A; width: 24px; height: 13px;
+  transform: scaleX(-1);
+  border-radius: 50% 30% 30% 50%;
+}
 
 @keyframes fish-swim {
-  0%   { left: -30px; transform: translateY(0); }
-  25%  { transform: translateY(-8px); }
+  0%   { left: -50px; transform: translateY(0); }
+  25%  { transform: translateY(-12px); }
   50%  { transform: translateY(0); }
-  75%  { transform: translateY(5px); }
-  100% { left: calc(100% + 30px); transform: translateY(0); }
+  75%  { transform: translateY(8px); }
+  100% { left: calc(100% + 50px); transform: translateY(0); }
 }
 
 @keyframes fish-swim-reverse {
-  0%   { right: -30px; transform: translateY(0); }
-  25%  { transform: translateY(6px); }
+  0%   { right: -50px; transform: translateY(0); }
+  25%  { transform: translateY(10px); }
   50%  { transform: translateY(0); }
-  75%  { transform: translateY(-7px); }
-  100% { right: calc(100% + 30px); transform: translateY(0); }
+  75%  { transform: translateY(-10px); }
+  100% { right: calc(100% + 50px); transform: translateY(0); }
 }
 
 /* Bubbles */
@@ -1462,24 +1531,32 @@ body {
   z-index: 0;
   pointer-events: none;
   opacity: var(--ship-opacity);
-  /* Default ship profile — dark navy silhouette with hull detail */
+  /* Default ship profile — side-view hull with deck and waterline */
   background:
+    /* Deck rail highlight */
     linear-gradient(180deg,
-      transparent 6%,
-      #1A237E 8%,
-      var(--ship-hull) 11%,
-      #546E7A 16%,
-      var(--ship-deck) 20%,
-      var(--ship-color) 24%,
-      var(--ship-color) 62%,
-      var(--ship-hull) 66%,
-      #263238 74%,
-      var(--ship-hull) 80%,
-      transparent 84%
+      transparent 15%,
+      rgba(255,255,255,0.12) 16%,
+      transparent 18%
+    ),
+    /* Main hull body */
+    linear-gradient(180deg,
+      transparent 12%,
+      #263238 14%,
+      #37474F 18%,
+      #455A64 22%,
+      #546E7A 28%,
+      #607D8B 34%,
+      #607D8B 55%,
+      #546E7A 60%,
+      #455A64 66%,
+      #37474F 72%,
+      #263238 78%,
+      #1A237E 82%,
+      transparent 85%
     );
-  /* Top/bottom navy outline only - sides open so cells connect */
-  border-top: 1px solid rgba(26,35,78,0.7);
-  border-bottom: 1px solid rgba(26,35,78,0.7);
+  border-top: 1px solid rgba(26,35,78,0.8);
+  border-bottom: 1px solid rgba(26,35,78,0.8);
 }
 
 /* Water overlay — ON TOP of ship, creates submerged/underwater look */
@@ -1497,89 +1574,125 @@ body {
   background-size: 100% 100%, 200% 200%;
 }
 
-/* ---- Ship type-specific silhouettes ---- */
+/* ---- Ship type-specific silhouettes (side-view naval profiles) ---- */
 
-/* Carrier: long flat deck with flight deck markings */
+/* Carrier: flat top flight deck, control island tower, wide hull */
 .cell.ship[data-ship-type="carrier"]::after {
   background:
-    repeating-linear-gradient(90deg, transparent 0px, transparent 6px, rgba(255,255,255,0.06) 6px, rgba(255,255,255,0.06) 7px),
+    /* Flight deck line markings */
+    repeating-linear-gradient(90deg,
+      transparent 0px, transparent 5px,
+      rgba(255,255,255,0.1) 5px, rgba(255,255,255,0.1) 6px
+    ),
+    /* Control island/tower - small raised section */
+    radial-gradient(ellipse 35% 45% at 70% 12%, #37474F 0%, #455A64 60%, transparent 62%),
+    /* Flat flight deck (wide, low profile) */
     linear-gradient(180deg,
-      transparent 4%,
-      #1A237E 6%,
-      #37474F 9%,
-      #546E7A 13%,
-      #78909C 17%,
-      #78909C 22%,
-      #607D8B 26%,
-      #607D8B 60%,
-      #546E7A 64%,
-      #455A64 70%,
-      #37474F 76%,
-      #263238 82%,
+      transparent 8%,
+      #263238 9%,
+      #455A64 12%,
+      #546E7A 15%,
+      #78909C 18%,
+      #90A4AE 22%,
+      #78909C 26%,
+      #607D8B 30%,
+      #607D8B 56%,
+      #546E7A 60%,
+      #455A64 66%,
+      #37474F 72%,
+      #263238 78%,
+      #1A237E 82%,
       transparent 85%
     );
 }
 
-/* Battleship: heavy armored hull with turret detail */
+/* Battleship: heavy hull, gun turrets, tall bridge tower */
 .cell.ship[data-ship-type="battleship"]::after {
   background:
-    radial-gradient(ellipse at 50% 32%, rgba(69,90,100,0.8) 0%, transparent 30%),
+    /* Forward gun turret */
+    radial-gradient(ellipse 40% 30% at 35% 14%, #455A64 0%, #37474F 70%, transparent 72%),
+    /* Bridge/superstructure tower */
+    radial-gradient(ellipse 30% 55% at 55% 8%, #37474F 0%, #263238 70%, transparent 72%),
+    /* Rear gun turret */
+    radial-gradient(ellipse 35% 25% at 75% 16%, #455A64 0%, #37474F 70%, transparent 72%),
+    /* Mast/antenna */
+    linear-gradient(90deg, transparent 52%, #263238 53%, #263238 54%, transparent 55%),
+    /* Heavy armored hull */
     linear-gradient(180deg,
-      transparent 4%,
-      #1A237E 6%,
-      #263238 10%,
-      #455A64 14%,
-      #546E7A 19%,
-      #607D8B 24%,
-      #607D8B 60%,
-      #546E7A 65%,
-      #455A64 70%,
-      #37474F 76%,
-      #263238 82%,
-      #1A237E 86%,
-      transparent 89%
+      transparent 14%,
+      #1A237E 15%,
+      #263238 18%,
+      #37474F 22%,
+      #455A64 26%,
+      #546E7A 30%,
+      #607D8B 35%,
+      #607D8B 58%,
+      #546E7A 62%,
+      #455A64 68%,
+      #37474F 74%,
+      #263238 80%,
+      #1A237E 84%,
+      transparent 87%
     );
 }
 
-/* Cruiser: medium ship with gun turret */
+/* Cruiser: medium hull, single gun turret, bridge */
 .cell.ship[data-ship-type="cruiser"]::after {
   background:
-    radial-gradient(circle at 50% 28%, rgba(55,71,79,0.6) 0%, transparent 22%),
+    /* Gun turret forward */
+    radial-gradient(ellipse 35% 28% at 40% 16%, #455A64 0%, #37474F 70%, transparent 72%),
+    /* Bridge structure */
+    radial-gradient(ellipse 25% 40% at 60% 10%, #37474F 0%, #263238 70%, transparent 72%),
+    /* Medium hull */
     linear-gradient(180deg,
-      transparent 10%,
-      #1A237E 12%,
-      #37474F 15%,
-      #546E7A 20%,
-      #607D8B 26%,
-      #607D8B 60%,
-      #546E7A 66%,
-      #455A64 72%,
-      #37474F 78%,
-      transparent 82%
+      transparent 16%,
+      #263238 17%,
+      #37474F 20%,
+      #455A64 24%,
+      #546E7A 28%,
+      #607D8B 33%,
+      #607D8B 56%,
+      #546E7A 62%,
+      #455A64 68%,
+      #37474F 74%,
+      #263238 80%,
+      transparent 83%
     );
 }
 
-/* Submarine: rounded low hull, deeper in water */
+/* Submarine: very low profile, conning tower bump, rounded hull */
 .cell.ship[data-ship-type="submarine"]::after {
   background:
-    radial-gradient(ellipse at 50% 15%, rgba(55,71,79,0.5) 0%, transparent 18%),
-    radial-gradient(ellipse at 50% 55%, #455A64 0%, #37474F 35%, #263238 55%, transparent 65%);
-  border-radius: 40% / 25%;
+    /* Conning tower / periscope */
+    radial-gradient(ellipse 25% 50% at 50% 22%, #37474F 0%, #263238 70%, transparent 72%),
+    /* Periscope mast */
+    linear-gradient(90deg, transparent 48%, #263238 49%, #263238 51%, transparent 52%),
+    /* Rounded low hull - mostly submerged */
+    radial-gradient(ellipse 90% 55% at 50% 58%, #455A64 0%, #37474F 40%, #263238 65%, transparent 70%);
+  border-radius: 40% / 20%;
+  border-top: none;
 }
 
-/* Destroyer: narrow fast profile */
+/* Destroyer: narrow fast hull, single gun, small bridge */
 .cell.ship[data-ship-type="destroyer"]::after {
   background:
+    /* Small gun turret */
+    radial-gradient(ellipse 30% 25% at 40% 18%, #455A64 0%, #37474F 70%, transparent 72%),
+    /* Small bridge */
+    radial-gradient(ellipse 20% 35% at 60% 12%, #37474F 0%, #263238 70%, transparent 72%),
+    /* Narrow fast hull */
     linear-gradient(180deg,
-      transparent 12%,
-      #1A237E 14%,
-      #37474F 17%,
-      #546E7A 22%,
-      #607D8B 28%,
-      #607D8B 58%,
-      #546E7A 64%,
+      transparent 18%,
+      #263238 19%,
+      #37474F 22%,
+      #455A64 26%,
+      #546E7A 30%,
+      #607D8B 35%,
+      #607D8B 54%,
+      #546E7A 60%,
+      #455A64 66%,
       #37474F 72%,
-      transparent 78%
+      transparent 76%
     );
 }
 
@@ -1591,33 +1704,18 @@ body {
   clip-path: polygon(0% 0%, 100% 0%, 100% 65%, 85% 85%, 70% 100%, 30% 100%, 15% 85%, 0% 65%);
 }
 
-/* Horizontal ship orientation — rotate gradients 90° */
+/* Horizontal ship orientation — same profiles apply, hull gradient rotated */
 .cell.ship[data-ship-orient="H"]::after {
-  background:
-    linear-gradient(90deg,
-      transparent 6%,
-      #1A237E 8%,
-      var(--ship-hull) 11%,
-      #546E7A 16%,
-      var(--ship-deck) 20%,
-      var(--ship-color) 24%,
-      var(--ship-color) 62%,
-      var(--ship-hull) 66%,
-      #263238 74%,
-      var(--ship-hull) 80%,
-      transparent 84%
-    );
-  /* For horizontal ships, connect left/right, outline top/bottom */
-  border-top: 1px solid rgba(26,35,78,0.7);
-  border-bottom: 1px solid rgba(26,35,78,0.7);
+  border-top: 1px solid rgba(26,35,78,0.8);
+  border-bottom: 1px solid rgba(26,35,78,0.8);
   border-left: none;
   border-right: none;
 }
 .cell.ship[data-ship-orient="H"][data-ship-pos="bow"]::after {
-  clip-path: polygon(0% 20%, 15% 10%, 35% 0%, 100% 0%, 100% 100%, 35% 100%, 15% 90%, 0% 80%);
+  clip-path: polygon(0% 15%, 10% 8%, 30% 0%, 100% 0%, 100% 100%, 30% 100%, 10% 92%, 0% 85%);
 }
 .cell.ship[data-ship-orient="H"][data-ship-pos="stern"]::after {
-  clip-path: polygon(0% 0%, 65% 0%, 85% 10%, 100% 20%, 100% 80%, 85% 90%, 65% 100%, 0% 100%);
+  clip-path: polygon(0% 0%, 70% 0%, 90% 8%, 100% 15%, 100% 85%, 90% 92%, 70% 100%, 0% 100%);
 }
 
 /* Sunk enemy ship — revealed using same underlay system, damaged look */
