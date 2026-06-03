@@ -1632,6 +1632,13 @@ body {
   transform: translate(-50%, -50%) rotate(90deg);
 }
 
+/* Carrier is wide (4.25:1) — stretch to fill the full 5-cell footprint
+   rather than being height-constrained by contain. Placed after both H and
+   V rules so this override wins at equal specificity. */
+.ship-overlay.ship-carrier .ship-sprite {
+  object-fit: fill;
+}
+
 /* Sunk enemy ship — revealed using same underlay system, damaged look */
 .cell.sunk-revealed {
   background: var(--water-cell) !important;
