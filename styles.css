@@ -1825,9 +1825,15 @@ body {
   75%      { transform: translateX(3px); }
 }
 
-/* Hit marker — fire & smoke */
+/* -------------------------------------------------------
+   PIXEL-ART MARKERS (hit / miss / sunk)
+   Box-shadow sprite technique — each "pixel" is 1px,
+   scaled up via transform to fill the cell.
+   ------------------------------------------------------- */
+
+/* Hit marker — orange / yellow starburst */
 .cell.hit {
-  background: rgba(255,87,34,0.25) !important;
+  background: rgba(255,87,34,0.18) !important;
   box-shadow: inset 0 0 0 2px var(--hit), 0 0 10px var(--hit-glow);
   overflow: hidden;
   position: relative;
@@ -1837,10 +1843,7 @@ body {
 .cell.hit::before {
   display: block !important;
   animation: none !important;
-  background:
-    radial-gradient(ellipse at 40% 70%, #FF9800 0%, transparent 50%),
-    radial-gradient(ellipse at 60% 30%, #FF5722 0%, transparent 45%),
-    radial-gradient(ellipse at 50% 50%, rgba(255,152,0,0.4) 0%, transparent 60%);
+  background: radial-gradient(circle, rgba(255,152,0,0.25) 0%, transparent 70%);
   opacity: 0.9;
   z-index: 1;
 }
@@ -1849,45 +1852,67 @@ body {
   content: '';
   position: absolute;
   z-index: 2;
-  /* Main fire */
-  bottom: 10%;
-  left: 15%;
-  width: 70%;
-  height: 80%;
-  background:
-    radial-gradient(ellipse at 50% 80%, #FF5722 0%, transparent 50%),
-    radial-gradient(ellipse at 30% 50%, #FF9800 0%, transparent 40%),
-    radial-gradient(ellipse at 70% 40%, #FFC107 0%, transparent 35%),
-    radial-gradient(ellipse at 50% 20%, #FFEB3B 0%, transparent 30%);
-  animation: fire-burn 0.8s ease-in-out infinite alternate;
-  clip-path: polygon(10% 100%, 0% 60%, 15% 30%, 30% 50%, 40% 10%, 50% 35%, 60% 5%, 70% 40%, 85% 20%, 100% 55%, 90% 100%);
+  top: 50%; left: 50%;
+  width: 1px; height: 1px;
+  background: #FFEE55;
+  box-shadow:
+    /* Core — bright yellow */
+     0    0   0 0 #FFEE55,
+    -1px  0   0 0 #FFD700,  1px  0   0 0 #FFD700,
+     0   -1px 0 0 #FFD700,  0    1px 0 0 #FFD700,
+    /* Inner ring — orange */
+    -1px -1px 0 0 #FF9900,  1px -1px 0 0 #FF9900,
+    -1px  1px 0 0 #FF9900,  1px  1px 0 0 #FF9900,
+    -2px  0   0 0 #FF8800,  2px  0   0 0 #FF8800,
+     0   -2px 0 0 #FF8800,  0    2px 0 0 #FF8800,
+    /* Mid spikes — dark orange */
+    -3px  0   0 0 #FF5500,  3px  0   0 0 #FF5500,
+     0   -3px 0 0 #FF5500,  0    3px 0 0 #FF5500,
+    -2px -2px 0 0 #FF4400,  2px -2px 0 0 #FF4400,
+    -2px  2px 0 0 #FF4400,  2px  2px 0 0 #FF4400,
+    /* Outer tips — red */
+    -4px  0   0 0 #E63E00,  4px  0   0 0 #E63E00,
+     0   -4px 0 0 #E63E00,  0    4px 0 0 #E63E00,
+    -3px -1px 0 0 #E63E00,  3px -1px 0 0 #E63E00,
+    -3px  1px 0 0 #E63E00,  3px  1px 0 0 #E63E00,
+    -1px -3px 0 0 #E63E00,  1px -3px 0 0 #E63E00,
+    -1px  3px 0 0 #E63E00,  1px  3px 0 0 #E63E00,
+    -3px -3px 0 0 #CC2200,  3px -3px 0 0 #CC2200,
+    -3px  3px 0 0 #CC2200,  3px  3px 0 0 #CC2200,
+    /* Extreme tips — deep red */
+    -5px  0   0 0 #CC2200,  5px  0   0 0 #CC2200,
+     0   -5px 0 0 #CC2200,  0    5px 0 0 #CC2200;
+  transform: translate(-50%, -50%) scale(var(--px-scale, 3));
+  animation: hit-pixel-pulse 1.2s steps(2) infinite alternate;
+  image-rendering: pixelated;
 }
 
-@keyframes fire-burn {
-  0%   { transform: scaleY(0.85) scaleX(0.95); opacity: 0.85; filter: brightness(0.9); }
-  100% { transform: scaleY(1.05) scaleX(1.02); opacity: 1; filter: brightness(1.1); }
+@keyframes hit-pixel-pulse {
+  0%   { filter: brightness(1); }
+  100% { filter: brightness(1.35); }
 }
 
-/* Smoke puffs on hit cells */
+/* Smoke puffs on hit cells — kept for JS compat */
 .cell.hit .smoke-puff {
   position: absolute;
-  width: 8px;
-  height: 8px;
-  background: radial-gradient(circle, rgba(100,100,100,0.6) 0%, transparent 70%);
-  border-radius: 50%;
-  animation: smoke-rise 2s ease-out infinite;
+  width: 6px; height: 6px;
+  background: rgba(80,80,80,0.5);
+  border-radius: 0;
+  animation: smoke-rise-pixel 1.6s steps(4) infinite;
   pointer-events: none;
   z-index: 3;
+  image-rendering: pixelated;
 }
 .cell.hit .smoke-puff:nth-child(1) { left: 20%; bottom: 60%; animation-delay: 0s; }
-.cell.hit .smoke-puff:nth-child(2) { left: 55%; bottom: 50%; animation-delay: 0.7s; }
+.cell.hit .smoke-puff:nth-child(2) { left: 60%; bottom: 50%; animation-delay: 0.6s; }
 
-@keyframes smoke-rise {
-  0%   { transform: translateY(0) scale(0.6); opacity: 0.7; }
-  100% { transform: translateY(-12px) scale(1.5); opacity: 0; }
+@keyframes smoke-rise-pixel {
+  0%   { transform: translateY(0); opacity: 0.7; }
+  50%  { transform: translateY(-8px); opacity: 0.4; }
+  100% { transform: translateY(-14px); opacity: 0; }
 }
 
-/* Miss marker — water splash sprite */
+/* ----- Miss marker — blue concentric-circle reticle ----- */
 .cell.miss {
   background: var(--water-cell) !important;
   overflow: hidden;
@@ -1898,7 +1923,7 @@ body {
 .cell.miss::before {
   display: block !important;
   animation: water-shimmer 4s ease-in-out infinite !important;
-  opacity: 0.5;
+  opacity: 0.4;
   z-index: 0;
 }
 
@@ -1906,55 +1931,88 @@ body {
   content: '';
   position: absolute;
   z-index: 2;
-  inset: 15%;
-  background:
-    radial-gradient(circle at 50% 70%, rgba(144,202,249,0.6) 0%, transparent 40%),
-    radial-gradient(circle at 35% 40%, rgba(255,255,255,0.8) 0%, transparent 20%),
-    radial-gradient(circle at 65% 35%, rgba(255,255,255,0.7) 0%, transparent 18%),
-    radial-gradient(circle at 25% 25%, rgba(187,222,251,0.7) 0%, transparent 15%),
-    radial-gradient(circle at 75% 20%, rgba(187,222,251,0.6) 0%, transparent 14%),
-    radial-gradient(circle at 50% 50%, rgba(255,255,255,0.3) 0%, transparent 50%);
-  animation: splash-idle 3s ease-in-out infinite alternate;
+  top: 50%; left: 50%;
+  width: 1px; height: 1px;
+  background: #0D2847;
+  box-shadow:
+    /* Center — dark navy */
+     0    0   0 0 #0D2847,
+    /* Inner ring — white / light */
+    -1px  0   0 0 #FFFFFF,  1px  0   0 0 #FFFFFF,
+     0   -1px 0 0 #FFFFFF,  0    1px 0 0 #FFFFFF,
+    /* Second ring — light blue */
+    -1px -1px 0 0 #B8D8F0,  1px -1px 0 0 #B8D8F0,
+    -1px  1px 0 0 #B8D8F0,  1px  1px 0 0 #B8D8F0,
+    -2px  0   0 0 #7CB8E8,  2px  0   0 0 #7CB8E8,
+     0   -2px 0 0 #7CB8E8,  0    2px 0 0 #7CB8E8,
+    /* Third ring — white accent */
+    -2px -1px 0 0 #DDEEFF,  2px -1px 0 0 #DDEEFF,
+    -2px  1px 0 0 #DDEEFF,  2px  1px 0 0 #DDEEFF,
+    -1px -2px 0 0 #DDEEFF,  1px -2px 0 0 #DDEEFF,
+    -1px  2px 0 0 #DDEEFF,  1px  2px 0 0 #DDEEFF,
+    -2px -2px 0 0 #E8F0F8,  2px -2px 0 0 #E8F0F8,
+    -2px  2px 0 0 #E8F0F8,  2px  2px 0 0 #E8F0F8,
+    /* Outer ring — medium blue */
+    -3px  0   0 0 #4A90C8,  3px  0   0 0 #4A90C8,
+     0   -3px 0 0 #4A90C8,  0    3px 0 0 #4A90C8,
+    -3px -1px 0 0 #5AA0D0,  3px -1px 0 0 #5AA0D0,
+    -3px  1px 0 0 #5AA0D0,  3px  1px 0 0 #5AA0D0,
+    -1px -3px 0 0 #5AA0D0,  1px -3px 0 0 #5AA0D0,
+    -1px  3px 0 0 #5AA0D0,  1px  3px 0 0 #5AA0D0,
+    -3px -2px 0 0 #5AA0D0,  3px -2px 0 0 #5AA0D0,
+    -3px  2px 0 0 #5AA0D0,  3px  2px 0 0 #5AA0D0,
+    -2px -3px 0 0 #5AA0D0,  2px -3px 0 0 #5AA0D0,
+    -2px  3px 0 0 #5AA0D0,  2px  3px 0 0 #5AA0D0,
+    /* Outermost edge — darker blue */
+    -4px  0   0 0 #3B78B0,  4px  0   0 0 #3B78B0,
+     0   -4px 0 0 #3B78B0,  0    4px 0 0 #3B78B0,
+    -3px -3px 0 0 #3B78B0,  3px -3px 0 0 #3B78B0,
+    -3px  3px 0 0 #3B78B0,  3px  3px 0 0 #3B78B0;
+  transform: translate(-50%, -50%) scale(var(--px-scale, 3));
+  animation: miss-pixel-ripple 2.4s steps(3) infinite;
+  image-rendering: pixelated;
 }
 
-/* Splash droplet particles */
+@keyframes miss-pixel-ripple {
+  0%   { filter: brightness(0.9); opacity: 0.85; }
+  50%  { filter: brightness(1.15); opacity: 1; }
+  100% { filter: brightness(0.9); opacity: 0.85; }
+}
+
+/* Splash droplet particles — kept for JS compat */
 .cell.miss .splash-drop {
   position: absolute;
-  width: 3px;
-  height: 5px;
-  background: rgba(187,222,251,0.8);
-  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  width: 3px; height: 3px;
+  background: #7CB8E8;
+  border-radius: 0;
   z-index: 3;
   pointer-events: none;
+  image-rendering: pixelated;
+  animation: drop-pixel-bob 1.8s steps(3) infinite;
 }
-.cell.miss .splash-drop:nth-child(1) { top: 15%; left: 30%; transform: rotate(-20deg); }
-.cell.miss .splash-drop:nth-child(2) { top: 10%; left: 60%; transform: rotate(15deg); }
-.cell.miss .splash-drop:nth-child(3) { top: 25%; left: 45%; transform: rotate(5deg); }
+.cell.miss .splash-drop:nth-child(1) { top: 12%; left: 28%; animation-delay: 0s; }
+.cell.miss .splash-drop:nth-child(2) { top: 8%;  left: 62%; animation-delay: 0.5s; }
+.cell.miss .splash-drop:nth-child(3) { top: 22%; left: 46%; animation-delay: 1.0s; }
 
-@keyframes splash-idle {
-  0%   { opacity: 0.7; transform: scale(0.95); }
-  100% { opacity: 1; transform: scale(1.02); }
+@keyframes drop-pixel-bob {
+  0%   { transform: translateY(0); opacity: 0.8; }
+  50%  { transform: translateY(-4px); opacity: 1; }
+  100% { transform: translateY(0); opacity: 0.8; }
 }
 
 @keyframes splash-appear {
-  0%   { transform: scale(0) translateY(10px); opacity: 0; }
-  40%  { transform: scale(1.4) translateY(-5px); opacity: 1; }
-  100% { transform: scale(1) translateY(0); opacity: 0.8; }
+  0%   { transform: translate(-50%,-50%) scale(0); opacity: 0; }
+  50%  { transform: translate(-50%,-50%) scale(calc(var(--px-scale, 3) * 1.3)); opacity: 1; }
+  100% { transform: translate(-50%,-50%) scale(var(--px-scale, 3)); opacity: 1; }
 }
 
 .cell.miss.miss-new::after {
-  animation: splash-appear 0.5s var(--ease-bounce) both;
+  animation: splash-appear 0.4s steps(4) both;
 }
 
-@keyframes ripple-expand {
-  0%   { transform: scale(0); opacity: 0; }
-  60%  { transform: scale(1.2); opacity: 1; }
-  100% { transform: scale(1); opacity: 0.7; }
-}
-
-/* Sunk marker — wreckage with smoke & fire */
+/* ----- Sunk marker — red splatter / sea-mine ----- */
 .cell.sunk {
-  background: rgba(211,47,47,0.3) !important;
+  background: rgba(211,47,47,0.25) !important;
   box-shadow: inset 0 0 0 2px var(--sunk), 0 0 12px var(--sunk-glow);
   overflow: hidden;
   position: relative;
@@ -1964,9 +2022,7 @@ body {
 .cell.sunk::before {
   display: block !important;
   animation: none !important;
-  background:
-    radial-gradient(ellipse at 40% 60%, rgba(211,47,47,0.5) 0%, transparent 50%),
-    radial-gradient(ellipse at 60% 40%, rgba(183,28,28,0.4) 0%, transparent 45%);
+  background: radial-gradient(circle, rgba(211,47,47,0.3) 0%, transparent 70%);
   opacity: 0.8;
   z-index: 1;
 }
@@ -1975,62 +2031,93 @@ body {
   content: '';
   position: absolute;
   z-index: 2;
-  bottom: 5%;
-  left: 10%;
-  width: 80%;
-  height: 90%;
-  background:
-    radial-gradient(ellipse at 50% 80%, var(--sunk) 0%, transparent 45%),
-    radial-gradient(ellipse at 30% 40%, #FF5722 0%, transparent 35%),
-    radial-gradient(ellipse at 70% 30%, #FF9800 0%, transparent 30%),
-    radial-gradient(ellipse at 50% 60%, rgba(55,71,79,0.6) 0%, transparent 40%);
-  clip-path: polygon(5% 100%, 0% 50%, 10% 25%, 25% 45%, 35% 8%, 50% 30%, 65% 2%, 75% 35%, 90% 15%, 100% 45%, 95% 100%);
-  animation: sunk-fire 1s ease-in-out infinite alternate;
+  top: 50%; left: 50%;
+  width: 1px; height: 1px;
+  background: #8B0000;
+  box-shadow:
+    /* Core — dark maroon with white highlights */
+     0    0   0 0 #8B0000,
+    -1px  0   0 0 #A01010,  1px  0   0 0 #A01010,
+     0   -1px 0 0 #A01010,  0    1px 0 0 #A01010,
+    -1px -1px 0 0 #C62828,  1px -1px 0 0 #C62828,
+    -1px  1px 0 0 #C62828,  1px  1px 0 0 #C62828,
+    /* White specks inside */
+     0    0   0 0 #FFCCCC,
+    -1px -1px 0 0 #FFFFFF,  1px  1px 0 0 #FFFFFF,
+    /* Inner ring — red */
+    -2px  0   0 0 #D32F2F,  2px  0   0 0 #D32F2F,
+     0   -2px 0 0 #D32F2F,  0    2px 0 0 #D32F2F,
+    -2px -1px 0 0 #B71C1C,  2px -1px 0 0 #B71C1C,
+    -2px  1px 0 0 #B71C1C,  2px  1px 0 0 #B71C1C,
+    -1px -2px 0 0 #B71C1C,  1px -2px 0 0 #B71C1C,
+    -1px  2px 0 0 #B71C1C,  1px  2px 0 0 #B71C1C,
+    /* Spikes — bright red, cardinal */
+    -3px  0   0 0 #E53935,  3px  0   0 0 #E53935,
+     0   -3px 0 0 #E53935,  0    3px 0 0 #E53935,
+    -4px  0   0 0 #D32F2F,  4px  0   0 0 #D32F2F,
+     0   -4px 0 0 #D32F2F,  0    4px 0 0 #D32F2F,
+    /* Spikes — diagonals */
+    -2px -2px 0 0 #E53935,  2px -2px 0 0 #E53935,
+    -2px  2px 0 0 #E53935,  2px  2px 0 0 #E53935,
+    -3px -3px 0 0 #D32F2F,  3px -3px 0 0 #D32F2F,
+    -3px  3px 0 0 #D32F2F,  3px  3px 0 0 #D32F2F,
+    /* Extra spike tips */
+    -5px  0   0 0 #B71C1C,  5px  0   0 0 #B71C1C,
+     0   -5px 0 0 #B71C1C,  0    5px 0 0 #B71C1C,
+    -3px -1px 0 0 #C62828,  3px -1px 0 0 #C62828,
+    -3px  1px 0 0 #C62828,  3px  1px 0 0 #C62828,
+    -1px -3px 0 0 #C62828,  1px -3px 0 0 #C62828,
+    -1px  3px 0 0 #C62828,  1px  3px 0 0 #C62828;
+  transform: translate(-50%, -50%) scale(var(--px-scale, 3));
+  animation: sunk-pixel-throb 0.9s steps(2) infinite alternate;
+  image-rendering: pixelated;
 }
 
-/* Sunk wreckage debris */
+/* Sunk wreckage debris — kept for JS compat */
 .cell.sunk .wreckage-piece {
   position: absolute;
   background: #455A64;
   z-index: 1;
   pointer-events: none;
-  opacity: 0.5;
+  opacity: 0.45;
+  image-rendering: pixelated;
 }
 .cell.sunk .wreckage-piece:nth-child(1) {
-  width: 60%; height: 4px; bottom: 30%; left: 20%;
+  width: 60%; height: 3px; bottom: 28%; left: 20%;
   transform: rotate(-8deg);
 }
 .cell.sunk .wreckage-piece:nth-child(2) {
-  width: 40%; height: 3px; bottom: 50%; left: 35%;
+  width: 40%; height: 3px; bottom: 52%; left: 35%;
   transform: rotate(12deg);
 }
 
-@keyframes sunk-fire {
-  0%   { opacity: 0.75; transform: scaleY(0.9); filter: brightness(0.85); }
-  100% { opacity: 1; transform: scaleY(1.08); filter: brightness(1.1); }
+@keyframes sunk-pixel-throb {
+  0%   { filter: brightness(0.85); }
+  100% { filter: brightness(1.25); }
 }
 
 /* Newly-hit animation */
 .cell.hit-new::after {
-  animation: hit-explode 0.5s var(--ease-bounce) both;
+  animation: hit-pixel-appear 0.5s steps(5) both;
 }
 
-@keyframes hit-explode {
-  0%   { transform: scale(0); opacity: 0; }
-  50%  { transform: scale(1.5); opacity: 1; }
-  100% { transform: scale(1); opacity: 1; }
+@keyframes hit-pixel-appear {
+  0%   { transform: translate(-50%,-50%) scale(0); opacity: 0; }
+  60%  { transform: translate(-50%,-50%) scale(calc(var(--px-scale, 3) * 1.4)); opacity: 1; }
+  100% { transform: translate(-50%,-50%) scale(var(--px-scale, 3)); opacity: 1; }
 }
 
 /* Spark particles on new hit */
 .cell.hit-new .spark,
 .cell.sunk-new .spark {
   position: absolute;
-  width: 4px;
-  height: 4px;
+  width: 3px; height: 3px;
   background: var(--accent);
+  border-radius: 0;
   z-index: 5;
   pointer-events: none;
-  animation: spark-fly 0.6s ease-out forwards;
+  animation: spark-fly 0.6s steps(6) forwards;
+  image-rendering: pixelated;
 }
 
 @keyframes spark-fly {
