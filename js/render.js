@@ -103,6 +103,15 @@ const Render = (() => {
     }
   }
 
+  // Ship sprite paths (high-res "1" variants)
+  const SHIP_SPRITES = {
+    carrier:    'assets/ships/carrier1.png',
+    battleship: 'assets/ships/battleship1.png',
+    cruiser:    'assets/ships/cruiser1.png',
+    submarine:  'assets/ships/submarine1.png',
+    destroyer:  'assets/ships/destroyer1.png'
+  };
+
   // Render each placed ship as a single continuous overlay spanning its full footprint
   function renderShipOverlays(containerId, side, { revealShips }) {
     const container = document.getElementById(containerId);
@@ -138,6 +147,24 @@ const Render = (() => {
 
       if (ship.sunk) {
         overlay.classList.add('ship-sunk-overlay');
+      }
+
+      // Add sprite image
+      const spriteSrc = SHIP_SPRITES[ship.id];
+      if (spriteSrc) {
+        const img = document.createElement('img');
+        img.className = 'ship-sprite';
+        img.src = spriteSrc;
+        img.alt = ship.id;
+        img.draggable = false;
+
+        if (orient === 'V') {
+          // Pre-rotation width = 89% of the vertical footprint span
+          const len = ship.cells.length;
+          img.style.width = 'calc(0.89 * (' + len + ' * var(--cell-size) + ' + (len - 1) + ' * 1px))';
+        }
+
+        overlay.appendChild(img);
       }
 
       layer.appendChild(overlay);
