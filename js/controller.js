@@ -4,6 +4,8 @@ const Controller = (() => {
   let state = createInitialState();
   let endModalTimer = null;
   let thinkingAnimFrame = null; // For the animated ellipsis
+  let _hoverRafId = 0; // rAF guard for mouseover throttling
+  let _touchRafId = 0; // rAF guard for touchmove throttling
 
   function init() {
     Render.buildBoardDOM('player-board');
@@ -108,7 +110,7 @@ const Controller = (() => {
       // Ripple effect on placed cells
       const cells = getShipCells(row, col, ship.size, state.placement.orientation);
       cells.forEach(([r, c]) => {
-        const el = document.querySelector(`#player-board .cell[data-row="${r}"][data-col="${c}"]`);
+        const el = Render._cellEl('player-board', r, c);
         if (el) Effects.placeRipple(el);
       });
       state.placement.nextIndex++;
@@ -119,10 +121,15 @@ const Controller = (() => {
 
   function onPlayerBoardHover(e) {
     if (state.phase !== 'setup') return;
+    if (_hoverRafId) return; // already scheduled
     const cell = e.target.closest('.cell');
     if (!cell || cell.classList.contains('label')) return;
     if (state.placement.nextIndex >= state.player.ships.length) return;
-    Render.showPreview(state, +cell.dataset.row, +cell.dataset.col);
+    const r = +cell.dataset.row, c = +cell.dataset.col;
+    _hoverRafId = requestAnimationFrame(() => {
+      _hoverRafId = 0;
+      Render.showPreview(state, r, c);
+    });
   }
 
   function onEnemyBoardClick(e) {
@@ -143,8 +150,7 @@ const Controller = (() => {
     if (result.result === 'hit') {
       Effects.showAttackResult('Direct Hit!', 'hit');
       Effects.screenShake('light');
-      const hitEl = document.querySelector(`#ai-board .cell[data-row="${row}"][data-col="${col}"]`);
-      Effects.sparks(hitEl);
+      Effects.sparks(Render._cellEl('ai-board', row, col));
       Render.markNewShot('ai-board', row, col, 'hit');
     } else {
       Effects.showAttackResult('Miss!', 'miss');
@@ -217,8 +223,7 @@ const Controller = (() => {
 
     if (result.result === 'hit') {
       Effects.screenShake('medium');
-      const hitEl = document.querySelector(`#player-board .cell[data-row="${move.row}"][data-col="${move.col}"]`);
-      Effects.sparks(hitEl);
+      Effects.sparks(Render._cellEl('player-board', move.row, move.col));
       Render.markNewShot('player-board', move.row, move.col, 'hit');
     } else {
       Render.markNewShot('player-board', move.row, move.col, 'miss');
@@ -302,6 +307,7 @@ const Controller = (() => {
     randomizeFleet(state.ai);
     Render.hideEndModal();
     Render.clearLog();
+    Render.invalidateCaches();
     Render.setSetupPanelVisible(true);
     Render.setRotateLabel(state.placement.orientation);
     document.getElementById('difficulty').value = state.difficulty;
@@ -312,14 +318,19 @@ const Controller = (() => {
 
   function onPlayerBoardTouch(e) {
     if (state.phase !== 'setup') return;
+    if (_touchRafId) return;
     const touch = e.touches[0];
     if (!touch) return;
-    const el = document.elementFromPoint(touch.clientX, touch.clientY);
-    if (!el) return;
-    const cell = el.closest('.cell');
-    if (!cell || cell.classList.contains('label')) return;
-    if (state.placement.nextIndex >= state.player.ships.length) return;
-    Render.showPreview(state, +cell.dataset.row, +cell.dataset.col);
+    const tx = touch.clientX, ty = touch.clientY;
+    _touchRafId = requestAnimationFrame(() => {
+      _touchRafId = 0;
+      const el = document.elementFromPoint(tx, ty);
+      if (!el) return;
+      const cell = el.closest('.cell');
+      if (!cell || cell.classList.contains('label')) return;
+      if (state.placement.nextIndex >= state.player.ships.length) return;
+      Render.showPreview(state, +cell.dataset.row, +cell.dataset.col);
+    });
   }
 
   function initBoardToggle() {

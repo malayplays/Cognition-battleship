@@ -15,19 +15,22 @@ const Effects = (() => {
   // Confetti burst (for victory)
   function confetti(count = 40) {
     const colors = ['#FFD54F', '#FF5722', '#4CAF50', '#2196F3', '#E91E63', '#FF9800', '#9C27B0'];
+    const frag = document.createDocumentFragment();
     for (let i = 0; i < count; i++) {
       const el = document.createElement('div');
       el.className = 'confetti';
-      el.style.left = Math.random() * 100 + 'vw';
-      el.style.top = '-10px';
-      el.style.background = colors[Math.floor(Math.random() * colors.length)];
-      el.style.animationDelay = (Math.random() * 1.5) + 's';
-      el.style.animationDuration = (1.5 + Math.random() * 1.5) + 's';
-      el.style.width = (4 + Math.random() * 8) + 'px';
-      el.style.height = (4 + Math.random() * 8) + 'px';
-      document.body.appendChild(el);
-      el.addEventListener('animationend', () => el.remove());
+      el.style.cssText =
+        'left:' + (Math.random() * 100) + 'vw;' +
+        'top:-10px;' +
+        'background:' + colors[i % colors.length] + ';' +
+        'animation-delay:' + (Math.random() * 1.5) + 's;' +
+        'animation-duration:' + (1.5 + Math.random() * 1.5) + 's;' +
+        'width:' + (4 + Math.random() * 8) + 'px;' +
+        'height:' + (4 + Math.random() * 8) + 'px;';
+      el.addEventListener('animationend', () => el.remove(), { once: true });
+      frag.appendChild(el);
     }
+    document.body.appendChild(frag);
   }
 
   // Create spark particles on a cell
@@ -36,26 +39,26 @@ const Effects = (() => {
     const rect = cellEl.getBoundingClientRect();
     const cx = rect.left + rect.width / 2;
     const cy = rect.top + rect.height / 2;
+    const frag = document.createDocumentFragment();
 
+    const sparksArr = [];
     for (let i = 0; i < count; i++) {
       const spark = document.createElement('div');
-      spark.className = 'confetti'; // reuse confetti animation
+      spark.className = 'confetti';
       const angle = (Math.PI * 2 * i) / count;
       const dist = 20 + Math.random() * 30;
-      spark.style.left = cx + 'px';
-      spark.style.top = cy + 'px';
-      spark.style.width = '4px';
-      spark.style.height = '4px';
-      spark.style.background = i % 2 === 0 ? '#FF5722' : '#FFD54F';
-      spark.style.position = 'fixed';
-      spark.style.zIndex = '200';
-      spark.style.pointerEvents = 'none';
-      spark.style.animation = `spark-fly 0.6s ease-out forwards`;
-      spark.style.setProperty('--sx', Math.cos(angle) * dist + 'px');
-      spark.style.setProperty('--sy', Math.sin(angle) * dist + 'px');
-      document.body.appendChild(spark);
-      setTimeout(() => spark.remove(), 700);
+      spark.style.cssText =
+        'left:' + cx + 'px;top:' + cy + 'px;width:4px;height:4px;' +
+        'background:' + (i % 2 === 0 ? '#FF5722' : '#FFD54F') + ';' +
+        'position:fixed;z-index:200;pointer-events:none;' +
+        'animation:spark-fly 0.6s ease-out forwards;' +
+        '--sx:' + (Math.cos(angle) * dist) + 'px;' +
+        '--sy:' + (Math.sin(angle) * dist) + 'px;';
+      frag.appendChild(spark);
+      sparksArr.push(spark);
     }
+    document.body.appendChild(frag);
+    setTimeout(() => { for (const s of sparksArr) s.remove(); }, 700);
   }
 
   // Show banner (e.g. "SHIP SUNK!")
