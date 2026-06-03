@@ -1305,11 +1305,9 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  flex: 1;
   gap: 0.75rem;
   padding: var(--board-top-gap) 1rem 1rem;
-  margin-top: 0;
+  margin-top: auto;
 }
 
 .board-container {
@@ -2044,7 +2042,10 @@ body {
    STATUS PANEL & BATTLE LOG
    ============================================================ */
 .status-panel {
-  margin: 0.75rem auto;
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-left: auto;
+  margin-right: auto;
   max-width: 900px;
   padding: 14px 1rem 0;
 }
@@ -2337,7 +2338,7 @@ body {
 
   .game-header { padding: 0.5rem 0.75rem; }
   .setup-panel { margin: 0.5rem 0.75rem; }
-  .status-panel { margin: 0.5rem 0.75rem; }
+  .status-panel { margin-top: auto; margin-bottom: auto; margin-left: 0.75rem; margin-right: 0.75rem; }
 }
 
 /* Mobile */
@@ -2398,7 +2399,10 @@ body {
   }
 
   .status-panel {
-    margin: 0.5rem;
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
     padding: 0.75rem;
   }
 
