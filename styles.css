@@ -2156,7 +2156,7 @@ body {
   flex: 1;
   border: none;
   border-radius: 0;
-  padding: 0.6rem;
+  padding: 0.5rem 0.35rem;
   font-family: var(--font-pixel);
   font-size: var(--fs-caption);
   background: var(--panel-bg);
@@ -2167,6 +2167,11 @@ body {
   cursor: pointer;
   transition: background 0.2s ease, color 0.2s ease;
   box-shadow: none;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4em;
 }
 
 .board-toggle button:hover:not(:disabled) {
