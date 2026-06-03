@@ -6,11 +6,55 @@ const Controller = (() => {
   function init() {
     Render.buildBoardDOM('player-board');
     Render.buildBoardDOM('ai-board');
+    bindHomeEvents();
     bindEvents();
-    // AI fleet placed at startup so a quick Randomize on player side is enough.
     randomizeFleet(state.ai);
     switchToBoard('player');
+    Effects.setBgPhase('menu');
     refreshAll();
+  }
+
+  function bindHomeEvents() {
+    document.getElementById('home-play-btn').addEventListener('click', () => {
+      Render.showScreen('game-screen');
+      Effects.setBgPhase('setup');
+    });
+
+    document.getElementById('home-howto-btn').addEventListener('click', () => {
+      document.getElementById('howto-modal').classList.remove('hidden');
+    });
+    document.getElementById('howto-close-btn').addEventListener('click', () => {
+      document.getElementById('howto-modal').classList.add('hidden');
+    });
+
+    document.getElementById('home-settings-btn').addEventListener('click', () => {
+      document.getElementById('settings-modal').classList.remove('hidden');
+    });
+    document.getElementById('settings-close-btn').addEventListener('click', () => {
+      document.getElementById('settings-modal').classList.add('hidden');
+    });
+
+    document.getElementById('game-settings-btn').addEventListener('click', () => {
+      document.getElementById('settings-modal').classList.remove('hidden');
+    });
+
+    document.getElementById('back-to-menu-btn').addEventListener('click', () => {
+      Render.showScreen('home-screen');
+      Effects.setBgPhase('menu');
+    });
+
+    document.getElementById('end-menu-btn').addEventListener('click', () => {
+      resetGame();
+      Render.showScreen('home-screen');
+      Effects.setBgPhase('menu');
+    });
+
+    // Close modals by clicking backdrop
+    document.querySelectorAll('.modal').forEach(modal => {
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) modal.classList.add('hidden');
+      });
+    });
   }
 
   function bindEvents() {
@@ -19,7 +63,6 @@ const Controller = (() => {
     document.getElementById('player-board').addEventListener('mouseleave', () => Render.clearPreview());
     document.getElementById('ai-board').addEventListener('click', onEnemyBoardClick);
 
-    // Touch: show placement preview on touch move/start (tap equivalent of hover)
     document.getElementById('player-board').addEventListener('touchstart', onPlayerBoardTouch, { passive: true });
     document.getElementById('player-board').addEventListener('touchmove', onPlayerBoardTouch, { passive: true });
     document.getElementById('player-board').addEventListener('touchend', () => Render.clearPreview());
@@ -44,7 +87,6 @@ const Controller = (() => {
       state.difficulty = e.target.value;
     });
 
-    // Mobile board toggle
     initBoardToggle();
   }
 
@@ -58,6 +100,12 @@ const Controller = (() => {
     if (idx >= state.player.ships.length) return;
     const ship = state.player.ships[idx];
     if (placeShip(state.player, idx, row, col, state.placement.orientation)) {
+      // Ripple effect on placed cells
+      const cells = getShipCells(row, col, ship.size, state.placement.orientation);
+      cells.forEach(([r, c]) => {
+        const el = document.querySelector(`#player-board .cell[data-row="${r}"][data-col="${c}"]`);
+        if (el) Effects.placeRipple(el);
+      });
       state.placement.nextIndex++;
       Render.clearPreview();
       refreshAll();
@@ -80,14 +128,49 @@ const Controller = (() => {
     const col = +cell.dataset.col;
     const result = fireAt(state.ai, row, col);
     if (!result.valid) return;
-    Render.log(state, `You fired at ${COL_LABELS[col]}${row + 1}: ${result.result.toUpperCase()}.`);
-    if (result.sunk) Render.log(state, `You sank the enemy ${result.sunk.name}!`);
+
+    // Determine log type
+    const logType = result.result === 'hit' ? (result.sunk ? 'sunk' : 'hit') : 'miss';
+
+    Render.log(state, `You fired at ${COL_LABELS[col]}${row + 1}: ${result.result.toUpperCase()}.`, logType);
+
+    // Attack result text
+    if (result.result === 'hit') {
+      Effects.showAttackResult('Direct Hit!', 'hit');
+      Effects.screenShake('light');
+      const hitEl = document.querySelector(`#ai-board .cell[data-row="${row}"][data-col="${col}"]`);
+      Effects.sparks(hitEl);
+      Render.markNewShot('ai-board', row, col, 'hit');
+    } else {
+      Effects.showAttackResult('Miss!', 'miss');
+      Render.markNewShot('ai-board', row, col, 'miss');
+    }
+
+    if (result.sunk) {
+      Render.log(state, `You sank the enemy ${result.sunk.name}!`, 'sunk');
+      setTimeout(() => {
+        Effects.showBanner(`${result.sunk.name} Sunk!`);
+        Effects.screenShake('medium');
+      }, 400);
+      // Mark all cells of sunk ship
+      result.sunk.cells.forEach(([r, c]) => {
+        Render.markNewShot('ai-board', r, c, 'sunk');
+      });
+    }
+
     Render.renderBoard('ai-board', state.ai, { revealShips: false });
+    Render.renderFleetStatus(state);
+
     if (result.allSunk) return endGame('player');
+
     state.turn = 'ai';
     Render.setEnemyPlayable(false);
     Render.renderTurnIndicator(state);
-    setTimeout(aiTurn, 500);
+
+    // Check for late-battle phase change
+    updateBgForBattle();
+
+    setTimeout(aiTurn, 600);
   }
 
   function aiTurn() {
@@ -95,16 +178,51 @@ const Controller = (() => {
     const move = AI.getAIMove(state, state.difficulty);
     if (!move) return;
     const result = fireAt(state.player, move.row, move.col);
-    if (!result.valid) { // shouldn't happen for the random AI
+    if (!result.valid) {
       return setTimeout(aiTurn, 0);
     }
-    Render.log(state, `Enemy fired at ${COL_LABELS[move.col]}${move.row + 1}: ${result.result.toUpperCase()}.`);
-    if (result.sunk) Render.log(state, `The enemy sank your ${result.sunk.name}!`);
+
+    const logType = result.result === 'hit' ? (result.sunk ? 'sunk' : 'hit') : 'miss';
+    Render.log(state, `Enemy fired at ${COL_LABELS[move.col]}${move.row + 1}: ${result.result.toUpperCase()}.`, logType);
+
+    if (result.result === 'hit') {
+      Effects.screenShake('medium');
+      const hitEl = document.querySelector(`#player-board .cell[data-row="${move.row}"][data-col="${move.col}"]`);
+      Effects.sparks(hitEl);
+      Render.markNewShot('player-board', move.row, move.col, 'hit');
+    } else {
+      Render.markNewShot('player-board', move.row, move.col, 'miss');
+    }
+
+    if (result.sunk) {
+      Render.log(state, `The enemy sank your ${result.sunk.name}!`, 'sunk');
+      setTimeout(() => {
+        Effects.showBanner(`Your ${result.sunk.name} Sunk!`);
+        Effects.screenShake('heavy');
+      }, 300);
+      result.sunk.cells.forEach(([r, c]) => {
+        Render.markNewShot('player-board', r, c, 'sunk');
+      });
+    }
+
     Render.renderBoard('player-board', state.player, { revealShips: true });
+    Render.renderFleetStatus(state);
+
     if (result.allSunk) return endGame('ai');
     state.turn = 'player';
     Render.setEnemyPlayable(true);
     Render.renderTurnIndicator(state);
+
+    updateBgForBattle();
+  }
+
+  function updateBgForBattle() {
+    const totalShips = 10; // 5 per side
+    const sunkCount = state.player.ships.filter(s => s.sunk).length +
+                      state.ai.ships.filter(s => s.sunk).length;
+    if (sunkCount >= 6) {
+      Effects.setBgPhase('late');
+    }
   }
 
   function startGame() {
@@ -115,8 +233,10 @@ const Controller = (() => {
     Render.clearPreview();
     Render.setEnemyPlayable(true);
     Render.renderTurnIndicator(state);
-    Render.log(state, 'Battle begins. You fire first.');
+    Render.renderFleetStatus(state);
+    Render.log(state, 'Battle begins. You fire first!', 'hit');
     switchToBoard('ai');
+    Effects.setBgPhase('battle');
   }
 
   function endGame(winner) {
@@ -124,9 +244,17 @@ const Controller = (() => {
     state.winner = winner;
     Render.setEnemyPlayable(false);
     Render.renderTurnIndicator(state);
-    // Reveal AI ships on loss/win for closure.
     Render.renderBoard('ai-board', state.ai, { revealShips: true });
-    Render.showEndModal(state);
+    Render.renderFleetStatus(state);
+
+    if (winner === 'player') {
+      Effects.setBgPhase('victory');
+      Effects.confetti(50);
+    } else {
+      Effects.setBgPhase('defeat');
+    }
+
+    setTimeout(() => Render.showEndModal(state), 800);
   }
 
   function resetGame() {
@@ -138,6 +266,7 @@ const Controller = (() => {
     Render.setRotateLabel(state.placement.orientation);
     document.getElementById('difficulty').value = state.difficulty;
     switchToBoard('player');
+    Effects.setBgPhase('setup');
     refreshAll();
   }
 
@@ -186,6 +315,7 @@ const Controller = (() => {
     Render.renderTurnIndicator(state);
     Render.setStartEnabled(state.phase === 'setup' && allShipsPlaced(state.player));
     Render.setEnemyPlayable(state.phase === 'playing' && state.turn === 'player');
+    Render.renderFleetStatus(state);
   }
 
   return { init };
