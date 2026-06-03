@@ -1614,6 +1614,12 @@ body {
   object-fit: contain;
 }
 
+/* Carrier is wide (4.25:1) — stretch to fill the full 5-cell footprint
+   rather than being height-constrained by contain. */
+.ship-overlay.ship-carrier .ship-sprite {
+  object-fit: fill;
+}
+
 /* Vertical: horizontal sprite rotated 90deg.
    Width (pre-rotation = visual height post-rotation) set inline by JS
    to 89% of the N-cell vertical span. Height = one cell (becomes visual
