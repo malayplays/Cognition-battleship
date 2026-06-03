@@ -1988,7 +1988,7 @@ body {
 .status-panel {
   margin: 0.75rem auto;
   max-width: 900px;
-  padding: 0 1rem;
+  padding: 14px 1rem 0;
 }
 
 .status-row {
@@ -2044,6 +2044,27 @@ body {
   letter-spacing: 0.5px;
   padding-top: 0.5rem;
   border-top: 2px solid rgba(255,255,255,0.1);
+
+  /* Themed scrollbar — Webkit (Chrome / Safari / Edge) */
+  scrollbar-width: thin;
+  scrollbar-color: var(--panel-wood-light) transparent;
+}
+
+.battle-log::-webkit-scrollbar {
+  width: 6px;
+}
+
+.battle-log::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.battle-log::-webkit-scrollbar-thumb {
+  background: var(--panel-wood-light);
+  border: 1px solid var(--panel-wood);
+}
+
+.battle-log::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
 }
 
 .battle-log div {
