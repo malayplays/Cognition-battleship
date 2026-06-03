@@ -8,6 +8,23 @@
   /* Cell sizing */
   --cell-size: clamp(30px, 4.5vw, 48px);
 
+  /* ===== TYPE SCALE (fluid, rem-based with clamp) ===== */
+  --fs-title:     clamp(2rem, 5vw + 0.5rem, 4rem);       /* game title */
+  --fs-heading:   clamp(1rem, 1.8vw + 0.4rem, 1.5rem);   /* panel/modal headings */
+  --fs-board-title: clamp(0.85rem, 1.4vw + 0.3rem, 1.15rem); /* board labels above grid */
+  --fs-label:     clamp(0.7rem, 1vw + 0.2rem, 0.95rem);  /* form labels, fleet list */
+  --fs-body:      clamp(0.75rem, 1vw + 0.2rem, 0.95rem);  /* body text, instructions */
+  --fs-caption:   clamp(0.6rem, 0.8vw + 0.2rem, 0.75rem); /* small/caption text */
+  --fs-btn:       clamp(0.7rem, 0.9vw + 0.2rem, 0.85rem); /* button text */
+  --fs-btn-sm:    clamp(0.6rem, 0.7vw + 0.15rem, 0.72rem);/* small buttons */
+  --fs-coord:     clamp(0.55rem, 1.2vw + 0.15rem, 0.85rem); /* board coordinate labels — scales with viewport like cell-size */
+  --fs-fleet-icon: clamp(0.6rem, 0.9vw + 0.15rem, 0.8rem); /* fleet status icons */
+  --fs-log:       clamp(0.55rem, 0.7vw + 0.15rem, 0.7rem); /* battle log entries */
+  --fs-turn:      clamp(0.7rem, 1.5vw + 0.2rem, 1rem);   /* turn indicator */
+  --fs-banner:    clamp(1.1rem, 2.5vw + 0.3rem, 1.75rem); /* banner overlay */
+  --fs-subtitle:  clamp(0.9rem, 1.8vw + 0.2rem, 1.3rem); /* title subtitle */
+  --fs-icon:      clamp(1.1rem, 1.5vw + 0.3rem, 1.4rem); /* inline icons */
+
   /* Sky & ocean palette */
   --sky-top:     #87CEEB;
   --sky-bottom:  #B0E0FF;
@@ -926,10 +943,11 @@ body {
 }
 
 .title-anchor {
-  font-size: 3rem;
+  font-size: clamp(2.5rem, 5vw + 0.5rem, 3.5rem);
   animation: anchor-spin 6s linear infinite;
   display: inline-block;
   filter: drop-shadow(0 0 8px var(--accent-glow));
+  line-height: 1.2;
 }
 
 @keyframes anchor-spin {
@@ -944,7 +962,7 @@ body {
 
 .pixel-title {
   font-family: var(--font-pixel);
-  font-size: clamp(2rem, 6vw, 4rem);
+  font-size: var(--fs-title);
   color: var(--accent);
   text-shadow:
     4px 4px 0 #E65100,
@@ -957,7 +975,7 @@ body {
 
 .title-sub {
   font-family: var(--font-pixel2);
-  font-size: clamp(0.9rem, 2vw, 1.3rem);
+  font-size: var(--fs-subtitle);
   color: var(--text);
   text-shadow: 2px 2px 0 rgba(0,0,0,0.5);
   margin: 0;
@@ -978,9 +996,10 @@ body {
 
 .pixel-text-sm {
   font-family: var(--font-pixel);
-  font-size: 0.6rem;
+  font-size: var(--fs-caption);
   color: var(--text-dim);
   letter-spacing: 1px;
+  line-height: 1.4;
 }
 
 /* ============================================================
@@ -988,7 +1007,7 @@ body {
    ============================================================ */
 .pixel-btn {
   font-family: var(--font-pixel);
-  font-size: 0.75rem;
+  font-size: var(--fs-btn);
   color: var(--text);
   background: var(--panel-bg);
   border: 3px solid #455A64;
@@ -996,6 +1015,7 @@ body {
   cursor: pointer;
   text-transform: uppercase;
   letter-spacing: 1px;
+  line-height: 1.3;
   position: relative;
   transition: transform 0.1s var(--ease-bounce), box-shadow 0.1s ease;
   box-shadow: var(--pixel-shadow);
@@ -1044,14 +1064,16 @@ body {
 }
 
 .pixel-btn-sm {
-  font-size: 0.6rem;
+  font-size: var(--fs-btn-sm);
   padding: 0.4rem 0.75rem;
   min-height: 36px;
   box-shadow: 2px 2px 0px #0D1B2A;
 }
 
 .btn-icon {
-  font-size: 1em;
+  font-size: var(--fs-icon);
+  line-height: 1;
+  vertical-align: middle;
 }
 
 /* ============================================================
@@ -1085,11 +1107,12 @@ body {
 
 .pixel-heading {
   font-family: var(--font-pixel);
-  font-size: 1rem;
+  font-size: var(--fs-heading);
   color: var(--accent);
   text-shadow: 2px 2px 0 rgba(0,0,0,0.5);
   margin: 0 0 0.75rem;
   letter-spacing: 1px;
+  line-height: 1.3;
 }
 
 /* ============================================================
@@ -1097,7 +1120,7 @@ body {
    ============================================================ */
 .pixel-select {
   font-family: var(--font-pixel);
-  font-size: 0.7rem;
+  font-size: var(--fs-label);
   color: var(--text);
   background: rgba(0,0,0,0.3);
   border: 2px solid #455A64;
@@ -1113,9 +1136,10 @@ body {
   align-items: center;
   gap: 0.75rem;
   font-family: var(--font-pixel);
-  font-size: 0.7rem;
+  font-size: var(--fs-label);
   color: var(--text-dim);
   letter-spacing: 1px;
+  line-height: 1.4;
 }
 
 /* ============================================================
@@ -1162,7 +1186,7 @@ body {
   align-items: flex-start;
   margin-bottom: 0.75rem;
   font-family: var(--font-sans);
-  font-size: 0.85rem;
+  font-size: var(--fs-body);
   color: var(--text-dim);
   line-height: 1.5;
 }
@@ -1171,12 +1195,12 @@ body {
 
 .step-num {
   font-family: var(--font-pixel);
-  font-size: 0.75rem;
+  font-size: var(--fs-label);
   color: var(--accent);
   background: rgba(255,213,79,0.15);
   border: 2px solid var(--accent);
-  min-width: 28px;
-  height: 28px;
+  min-width: 30px;
+  height: 30px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1220,11 +1244,12 @@ body {
 
 .turn-indicator {
   font-family: var(--font-pixel);
-  font-size: clamp(0.65rem, 1.8vw, 0.85rem);
+  font-size: var(--fs-turn);
   color: var(--accent);
   text-shadow: 2px 2px 0 rgba(0,0,0,0.5);
   letter-spacing: 1px;
   text-transform: uppercase;
+  line-height: 1.3;
   animation: pulse-glow 2s ease-in-out infinite;
 }
 
@@ -1247,14 +1272,15 @@ body {
 }
 
 .setup-heading {
-  font-size: 0.85rem;
+  font-size: var(--fs-heading);
 }
 
 .setup-instructions {
   font-family: var(--font-sans);
-  font-size: 0.8rem;
+  font-size: var(--fs-body);
   color: var(--text-dim);
   margin: 0 0 0.5rem;
+  line-height: 1.4;
 }
 
 .fleet-list {
@@ -1268,12 +1294,13 @@ body {
 
 .fleet-list li {
   font-family: var(--font-pixel);
-  font-size: 0.55rem;
-  padding: 0.35rem 0.65rem;
+  font-size: var(--fs-caption);
+  padding: 0.4rem 0.7rem;
   border: 2px solid #455A64;
   color: var(--text-dim);
   background: rgba(0,0,0,0.2);
   letter-spacing: 1px;
+  line-height: 1.4;
   transition: all 0.2s ease;
   box-shadow: 2px 2px 0 rgba(0,0,0,0.3);
 }
@@ -1327,11 +1354,14 @@ body {
   margin: 0 0 0.5rem;
   padding-top: 0.5rem;
   font-family: var(--font-pixel);
-  font-size: 0.7rem;
+  font-size: var(--fs-board-title);
   color: var(--accent);
   text-shadow: 2px 2px 0 rgba(0,0,0,0.5);
-  letter-spacing: 1px;
+  letter-spacing: 1.5px;
   text-transform: uppercase;
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: visible;
 }
 
 .board-frame {
@@ -1403,7 +1433,7 @@ body {
   align-items: center;
   justify-content: center;
   font-family: var(--font-pixel);
-  font-size: 0.5rem;
+  font-size: var(--fs-coord);
   transition: background 0.15s ease, box-shadow 0.15s ease;
 }
 
@@ -1474,10 +1504,13 @@ body {
 .cell.label {
   background: rgba(13,71,161,0.5);
   color: var(--accent);
-  font-size: 0.5rem;
+  font-size: var(--fs-coord);
   font-weight: bold;
   cursor: default;
   letter-spacing: 0;
+  line-height: 1;
+  text-align: center;
+  overflow: visible;
 }
 
 .cell.label::before { display: none; }
@@ -2017,25 +2050,28 @@ body {
 }
 
 .ship-status-panel h4 {
-  margin: 0 0 0.3rem;
-  font-size: 0.55rem;
+  margin: 0 0 0.4rem;
+  font-size: var(--fs-caption);
   letter-spacing: 1px;
   text-transform: uppercase;
+  line-height: 1.3;
 }
 
 .fleet-status-icons {
   display: flex;
-  gap: 0.35rem;
+  gap: 0.4rem;
   flex-wrap: wrap;
+  align-items: center;
 }
 
 .fleet-status-icon {
   font-family: var(--font-pixel);
-  font-size: 0.5rem;
-  padding: 0.2rem 0.4rem;
+  font-size: var(--fs-fleet-icon);
+  padding: 0.3rem 0.5rem;
   border: 2px solid #455A64;
   background: rgba(0,0,0,0.2);
   color: var(--text-dim);
+  line-height: 1.2;
   transition: all 0.3s ease;
 }
 
@@ -2052,11 +2088,11 @@ body {
 }
 
 .battle-log {
-  max-height: 100px;
+  max-height: 120px;
   overflow-y: auto;
   font-family: var(--font-pixel);
-  font-size: 0.5rem;
-  line-height: 1.8;
+  font-size: var(--fs-log);
+  line-height: 1.9;
   color: var(--text-dim);
   letter-spacing: 0.5px;
   padding-top: 0.5rem;
@@ -2113,13 +2149,14 @@ body {
   flex: 1;
   border: none;
   border-radius: 0;
-  padding: 0.5rem;
+  padding: 0.6rem;
   font-family: var(--font-pixel);
-  font-size: 0.55rem;
+  font-size: var(--fs-caption);
   background: var(--panel-bg);
   color: var(--text-dim);
-  min-height: 40px;
+  min-height: 42px;
   letter-spacing: 1px;
+  line-height: 1.3;
   cursor: pointer;
   transition: background 0.2s ease, color 0.2s ease;
   box-shadow: none;
@@ -2159,7 +2196,7 @@ body {
 
 .attack-overlay .attack-result-text {
   font-family: var(--font-pixel);
-  font-size: 1.2rem;
+  font-size: var(--fs-heading);
   color: var(--text);
   text-shadow: 3px 3px 0 rgba(0,0,0,0.7);
   opacity: 0;
@@ -2192,13 +2229,14 @@ body {
 
 .banner-text {
   font-family: var(--font-pixel);
-  font-size: clamp(1rem, 3vw, 1.5rem);
+  font-size: var(--fs-banner);
   color: var(--accent);
   text-shadow: 3px 3px 0 #E65100, 0 0 20px var(--accent-glow);
   text-transform: uppercase;
   letter-spacing: 3px;
+  line-height: 1.3;
   animation: banner-slam 1s var(--ease-bounce) both;
-  padding: 0.75rem 2rem;
+  padding: 0.85rem 2rem;
   border: 4px solid var(--accent);
   background: var(--panel-bg);
   box-shadow: var(--pixel-shadow);
@@ -2220,28 +2258,31 @@ body {
 }
 
 .end-title {
-  font-size: 1.3rem !important;
+  font-size: var(--fs-banner) !important;
   margin-bottom: 0.5rem;
+  line-height: 1.3;
 }
 
 .end-message {
   font-family: var(--font-sans);
-  font-size: 0.85rem;
+  font-size: var(--fs-body);
   color: var(--text-dim);
   margin: 0 0 1rem;
+  line-height: 1.5;
 }
 
 .end-stats {
   font-family: var(--font-pixel);
-  font-size: 0.55rem;
+  font-size: var(--fs-caption);
   color: var(--text-dim);
   margin-bottom: 1rem;
   line-height: 2;
 }
 
 .end-decoration {
-  font-size: 2.5rem;
+  font-size: clamp(2rem, 4vw + 0.5rem, 3rem);
   margin-bottom: 0.5rem;
+  line-height: 1.2;
 }
 
 .end-panel .pixel-btn {
@@ -2301,10 +2342,10 @@ body {
 
 /* Mobile */
 @media (max-width: 520px) {
-  :root { --cell-size: clamp(26px, calc((100vw - 60px) / 11), 34px); }
-
-  .pixel-title {
-    font-size: clamp(1.5rem, 8vw, 2.5rem);
+  :root {
+    --cell-size: clamp(26px, calc((100vw - 60px) / 11), 34px);
+    --topbar-height: 44px;
+    --board-top-gap: 12px;
   }
 
   .title-anchor { font-size: 2rem; }
@@ -2329,7 +2370,7 @@ body {
     align-items: center;
   }
 
-  .board-label { display: none; }
+  .board-label { font-size: var(--fs-caption); }
 
   .board-wrapper.hidden-mobile { display: none; }
 
@@ -2338,13 +2379,7 @@ body {
   .setup-buttons button {
     flex: 1 1 auto;
     min-width: 0;
-    font-size: 0.55rem;
     padding: 0.5rem 0.5rem;
-  }
-
-  :root {
-    --topbar-height: 44px;
-    --board-top-gap: 12px;
   }
 
   .game-header {
@@ -2364,24 +2399,16 @@ body {
     padding: 0.75rem;
   }
 
-  .battle-log { max-height: 70px; font-size: 0.45rem; }
-
-  .turn-indicator { font-size: 0.6rem; }
-
-  .pixel-btn-sm { font-size: 0.5rem; padding: 0.3rem 0.5rem; }
+  .battle-log { max-height: 80px; }
 
   .modal .modal-content {
     padding: 1rem;
     margin: 0.5rem;
   }
-
-  .pixel-heading { font-size: 0.75rem; }
 }
 
 @media (max-width: 360px) {
   :root { --cell-size: clamp(22px, calc((100vw - 50px) / 11), 28px); }
-
-  .cell { font-size: 0.4rem; }
 }
 
 /* Reduce motion */
