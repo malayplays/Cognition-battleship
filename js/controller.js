@@ -2,6 +2,7 @@
 
 const Controller = (() => {
   let state = createInitialState();
+  let endModalTimer = null;
 
   function init() {
     Render.buildBoardDOM('player-board');
@@ -39,6 +40,7 @@ const Controller = (() => {
     });
 
     document.getElementById('back-to-menu-btn').addEventListener('click', () => {
+      if (endModalTimer) { clearTimeout(endModalTimer); endModalTimer = null; }
       Render.showScreen('home-screen');
       Effects.setBgPhase('menu');
     });
@@ -254,7 +256,7 @@ const Controller = (() => {
       Effects.setBgPhase('defeat');
     }
 
-    setTimeout(() => Render.showEndModal(state), 800);
+    endModalTimer = setTimeout(() => { endModalTimer = null; Render.showEndModal(state); }, 800);
   }
 
   function resetGame() {
