@@ -9,11 +9,10 @@
 
 const AI = (() => {
   // ─── Impossible-mode tunable constants ───
-  // The AI maintains aiShotsToWin = playerShotsToWin - PACE_OFFSET at all times.
-  // This keeps it exactly PACE_OFFSET optimal hits ahead of the player in the race.
-  // Because the player fires first each turn and hits randomly, being 1 hit ahead
-  // in optimal terms guarantees the AI finishes first.
-  const PACE_OFFSET = 1;          // AI stays this many optimal hits ahead of player
+  // The AI stays tied with the player most of the game, then pulls 1 ahead in
+  // the endgame to guarantee it finishes first. Final margin = 1 shot.
+  const PACE_OFFSET = 0;          // 0 = stay tied mid-game
+  const ENDGAME_THRESHOLD = 3;    // when playerShotsToWin <= this, AI goes 1 ahead
 
   const ORTHO = [[-1, 0], [1, 0], [0, -1], [0, 1]];
   const AXES = [[0, 1], [1, 0]]; // horizontal, vertical
@@ -167,62 +166,57 @@ const AI = (() => {
     return { row, col };
   }
 
-  // Pick a guaranteed cheat hit. If `excludeWinning` is true, don't pick the
-  // last remaining cell of the last unsunk ship (avoid winning during holdback).
-  function cheatHit(state, rng, excludeWinning) {
-    let cells = unhitPlayerShipCells(state);
+  // Human-like cheat hit: finishes partially-damaged ships before starting new
+  // ones. Uses targetCandidates (line extension / neighbor exploration) filtered
+  // to guaranteed ship cells, so the pattern looks like a skilled human player.
+  function smartCheatHit(state, rng) {
+    const board = state.player.board;
+    const ships = state.player.ships;
+
+    // 1. If there are open hits, continue targeting that ship (human-like).
+    const targets = targetCandidates(board, ships);
+    if (targets.length > 0) {
+      // Filter target candidates to only ship cells (guaranteed hit).
+      const shipTargets = targets.filter(([r, c]) => board[r][c].ship && !board[r][c].shot);
+      if (shipTargets.length > 0) return pick(shipTargets, rng);
+    }
+
+    // 2. No open hits or no adjacent ship cells — start a new ship.
+    const cells = unhitPlayerShipCells(state);
     if (cells.length === 0) return null;
-
-    if (excludeWinning && cells.length === 1) {
-      // Only one hit-cell left — hitting it wins; must miss instead.
-      return null;
-    }
-
-    if (excludeWinning) {
-      // Don't fire the finishing blow on the very last unsunk ship if it's 1 hit from sinking
-      // AND that would win the game (i.e., all other ships already sunk).
-      const unsunkShips = state.player.ships.filter(s => !s.sunk);
-      if (unsunkShips.length === 1) {
-        const lastShip = unsunkShips[0];
-        const remaining = lastShip.size - lastShip.hits;
-        if (remaining === 1) {
-          // Filter out the last cell of this ship
-          const lastShipCells = new Set(
-            lastShip.cells
-              .filter(([r, c]) => !state.player.board[r][c].shot)
-              .map(([r, c]) => r + ',' + c)
-          );
-          cells = cells.filter(([r, c]) => !lastShipCells.has(r + ',' + c));
-          if (cells.length === 0) return null;
-        }
-      }
-    }
-
-    const [row, col] = cells[Math.floor(rng() * cells.length)];
-    return { row, col };
+    return pick(cells, rng);
   }
 
   function impossibleMove(state, rng) {
     const aiShotsToWin = shotsToWin(state.player);   // what AI still needs
     const playerShotsToWin = shotsToWin(state.ai);   // what player still needs
 
-    // Target: AI should need exactly (playerShotsToWin - PACE_OFFSET) hits.
-    // This keeps AI one optimal hit ahead at all times.
-    const target = playerShotsToWin - PACE_OFFSET;
+    // Endgame: when player is close to winning, AI pulls 1 ahead to guarantee
+    // it finishes first. Mid-game: stay tied (mirror player hits).
+    const target = playerShotsToWin <= ENDGAME_THRESHOLD
+      ? playerShotsToWin - 1   // 1 ahead → guarantees AI fires kill shot first
+      : playerShotsToWin - PACE_OFFSET;  // tied mid-game
 
-    // If one more hit wins the game for AI, take it unconditionally.
-    // This fires when playerShotsToWin = 2 and aiShotsToWin = 1 (tight finish).
-    if (aiShotsToWin === 1) {
-      return cheatHit(state, rng, false);
+    // KILL SHOT: fire only when BOTH sides need exactly 1 hit.
+    // The player just hit (dropped from 2→1 this turn), so the AI fires now.
+    // This guarantees margin = exactly 1 every game.
+    if (aiShotsToWin === 1 && playerShotsToWin <= 1) {
+      return smartCheatHit(state, rng);
     }
 
-    // If AI needs more hits than target, it's behind — take a guaranteed hit.
+    // If AI is at 1 but player still needs >1, hold fire (wait for player to
+    // catch up to 1 so the finish is exactly 1 shot apart).
+    if (aiShotsToWin === 1 && playerShotsToWin > 1) {
+      return believableMiss(state, rng);
+    }
+
+    // AI is behind target → guaranteed hit (catch up / pull ahead).
     if (aiShotsToWin > target) {
-      return cheatHit(state, rng, false) || believableMiss(state, rng);
+      return smartCheatHit(state, rng) || believableMiss(state, rng);
     }
 
-    // AI is at or ahead of target — miss to maintain pacing.
-    return believableMiss(state, rng) || cheatHit(state, rng, false);
+    // AI is at or ahead of target → miss to maintain pacing.
+    return believableMiss(state, rng) || smartCheatHit(state, rng);
   }
 
   function getAIMove(state, difficulty, rng = Math.random) {
@@ -240,7 +234,7 @@ const AI = (() => {
   api._internals = {
     inBounds, unfiredCells, isOpenHit, openHits,
     targetCandidates, huntCandidates, easyMove, huntTargetMove,
-    shotsToWin, unhitPlayerShipCells, believableMiss, cheatHit, impossibleMove,
+    shotsToWin, unhitPlayerShipCells, believableMiss, smartCheatHit, impossibleMove,
   };
   return api;
 })();
