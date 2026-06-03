@@ -50,7 +50,7 @@ const Effects = (() => {
       spark.style.position = 'fixed';
       spark.style.zIndex = '200';
       spark.style.pointerEvents = 'none';
-      spark.style.animation = `spark-particle 0.6s ease-out forwards`;
+      spark.style.animation = `spark-fly 0.6s ease-out forwards`;
       spark.style.setProperty('--sx', Math.cos(angle) * dist + 'px');
       spark.style.setProperty('--sy', Math.sin(angle) * dist + 'px');
       document.body.appendChild(spark);

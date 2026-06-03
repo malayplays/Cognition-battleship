@@ -52,6 +52,8 @@ const Render = (() => {
         delete el.dataset.shipType;
         delete el.dataset.shipPos;
         delete el.dataset.shipOrient;
+        delete el.dataset.shipIdx;
+        delete el.dataset.shipLen;
         // Remove dynamic children (smoke, splash, wreckage)
         el.querySelectorAll('.smoke-puff, .splash-drop, .wreckage-piece, .ship-wave').forEach(c => c.remove());
 
@@ -86,15 +88,15 @@ const Render = (() => {
     }
   }
 
-  // Set ship type, position (bow/mid/stern), orientation data on cell
+  // Set ship type, position (bow/mid/stern), orientation, index, length data on cell
   function setShipCellData(el, ship, r, c) {
     el.dataset.shipType = ship.id;
-    // Determine orientation from ship cells
+    el.dataset.shipLen = ship.cells.length;
     if (ship.cells.length >= 2) {
       const orient = ship.cells[0][0] === ship.cells[1][0] ? 'H' : 'V';
       el.dataset.shipOrient = orient;
-      // Find cell index in ship
       const idx = ship.cells.findIndex(([sr, sc]) => sr === r && sc === c);
+      el.dataset.shipIdx = idx;
       if (idx === 0) el.dataset.shipPos = 'bow';
       else if (idx === ship.cells.length - 1) el.dataset.shipPos = 'stern';
     }
