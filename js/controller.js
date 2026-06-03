@@ -3,6 +3,7 @@
 const Controller = (() => {
   let state = createInitialState();
   let endModalTimer = null;
+  let thinkingAnimFrame = null; // For the animated ellipsis
 
   function init() {
     Render.buildBoardDOM('player-board');
@@ -41,6 +42,8 @@ const Controller = (() => {
 
     document.getElementById('back-to-menu-btn').addEventListener('click', () => {
       if (endModalTimer) { clearTimeout(endModalTimer); endModalTimer = null; }
+      Thinking.reset();
+      clearThinkingIndicator();
       Render.showScreen('home-screen');
       Effects.setBgPhase('menu');
     });
@@ -165,6 +168,9 @@ const Controller = (() => {
 
     if (result.allSunk) return endGame('player');
 
+    // Record player move duration for pace-mirroring
+    Thinking.recordPlayerMove();
+
     state.turn = 'ai';
     Render.setEnemyPlayable(false);
     Render.renderTurnIndicator(state);
@@ -172,10 +178,32 @@ const Controller = (() => {
     // Check for late-battle phase change
     updateBgForBattle();
 
-    setTimeout(aiTurn, 600);
+    // Show "thinking" indicator and schedule AI move with human-like delay
+    showThinkingIndicator();
+    Thinking.scheduleAIMove(state, state.difficulty, aiTurn);
+  }
+
+  function showThinkingIndicator() {
+    const el = document.getElementById('turn-indicator');
+    let dots = 0;
+    function animate() {
+      dots = (dots + 1) % 4;
+      el.textContent = 'Opponent is taking aim' + '.'.repeat(dots);
+      el.style.color = 'var(--hit)';
+      thinkingAnimFrame = setTimeout(animate, 400);
+    }
+    animate();
+  }
+
+  function clearThinkingIndicator() {
+    if (thinkingAnimFrame !== null) {
+      clearTimeout(thinkingAnimFrame);
+      thinkingAnimFrame = null;
+    }
   }
 
   function aiTurn() {
+    clearThinkingIndicator();
     if (state.phase !== 'playing') return;
     const move = AI.getAIMove(state, state.difficulty);
     if (!move) return;
@@ -215,6 +243,9 @@ const Controller = (() => {
     Render.setEnemyPlayable(true);
     Render.renderTurnIndicator(state);
 
+    // Start timing the player's next move
+    Thinking.startPlayerTimer();
+
     updateBgForBattle();
   }
 
@@ -239,9 +270,13 @@ const Controller = (() => {
     Render.log(state, 'Battle begins. You fire first!', 'hit');
     switchToBoard('ai');
     Effects.setBgPhase('battle');
+    // Start timing the player's first move
+    Thinking.startPlayerTimer();
   }
 
   function endGame(winner) {
+    Thinking.cancelPending();
+    clearThinkingIndicator();
     state.phase = 'over';
     state.winner = winner;
     Render.setEnemyPlayable(false);
@@ -260,6 +295,9 @@ const Controller = (() => {
   }
 
   function resetGame() {
+    // Cancel any pending AI think timer and animation
+    Thinking.reset();
+    clearThinkingIndicator();
     state = createInitialState();
     randomizeFleet(state.ai);
     Render.hideEndModal();
