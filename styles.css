@@ -1614,12 +1614,6 @@ body {
   object-fit: contain;
 }
 
-/* Carrier is wide (4.25:1) — stretch to fill the full 5-cell footprint
-   rather than being height-constrained by contain. */
-.ship-overlay.ship-carrier .ship-sprite {
-  object-fit: fill;
-}
-
 /* Vertical: horizontal sprite rotated 90deg.
    Width (pre-rotation = visual height post-rotation) set inline by JS
    to 89% of the N-cell vertical span. Height = one cell (becomes visual
@@ -1636,6 +1630,13 @@ body {
   height: calc(var(--cell-size) * 0.60);
   object-fit: contain;
   transform: translate(-50%, -50%) rotate(90deg);
+}
+
+/* Carrier is wide (4.25:1) — stretch to fill the full 5-cell footprint
+   rather than being height-constrained by contain. Placed after both H and
+   V rules so this override wins at equal specificity. */
+.ship-overlay.ship-carrier .ship-sprite {
+  object-fit: fill;
 }
 
 /* Sunk enemy ship — revealed using same underlay system, damaged look */
