@@ -9,9 +9,10 @@
 
 const AI = (() => {
   // ─── Impossible-mode tunable constants ───
-  // The AI stays tied with the player (mirrors each player hit) so the game ends
-  // with both sides 1 hit from winning. AI fires the killing blow → margin of 1.
-  const PACE_OFFSET = 0;          // 0 = stay tied; AI wins by exactly 1 shot
+  // The AI stays tied with the player most of the game, then pulls 1 ahead in
+  // the endgame to guarantee it finishes first. Final margin = 1 shot.
+  const PACE_OFFSET = 0;          // 0 = stay tied mid-game
+  const ENDGAME_THRESHOLD = 3;    // when playerShotsToWin <= this, AI goes 1 ahead
 
   const ORTHO = [[-1, 0], [1, 0], [0, -1], [0, 1]];
   const AXES = [[0, 1], [1, 0]]; // horizontal, vertical
@@ -190,22 +191,31 @@ const AI = (() => {
     const aiShotsToWin = shotsToWin(state.player);   // what AI still needs
     const playerShotsToWin = shotsToWin(state.ai);   // what player still needs
 
-    // Target: AI should need exactly (playerShotsToWin - PACE_OFFSET) hits.
-    // With PACE_OFFSET=0, AI stays tied with player → wins by exactly 1.
-    const target = playerShotsToWin - PACE_OFFSET;
+    // Endgame: when player is close to winning, AI pulls 1 ahead to guarantee
+    // it finishes first. Mid-game: stay tied (mirror player hits).
+    const target = playerShotsToWin <= ENDGAME_THRESHOLD
+      ? playerShotsToWin - 1   // 1 ahead → guarantees AI fires kill shot first
+      : playerShotsToWin - PACE_OFFSET;  // tied mid-game
 
-    // LETHAL: if one more hit wins, take it unconditionally.
-    // Both sides are at 1 → player missed this turn → AI fires the kill shot.
-    if (aiShotsToWin === 1) {
+    // KILL SHOT: fire only when BOTH sides need exactly 1 hit.
+    // The player just hit (dropped from 2→1 this turn), so the AI fires now.
+    // This guarantees margin = exactly 1 every game.
+    if (aiShotsToWin === 1 && playerShotsToWin <= 1) {
       return smartCheatHit(state, rng);
     }
 
-    // AI is behind target (player hit, AI needs to mirror) → guaranteed hit.
+    // If AI is at 1 but player still needs >1, hold fire (wait for player to
+    // catch up to 1 so the finish is exactly 1 shot apart).
+    if (aiShotsToWin === 1 && playerShotsToWin > 1) {
+      return believableMiss(state, rng);
+    }
+
+    // AI is behind target → guaranteed hit (catch up / pull ahead).
     if (aiShotsToWin > target) {
       return smartCheatHit(state, rng) || believableMiss(state, rng);
     }
 
-    // AI is tied or ahead → miss to maintain pacing.
+    // AI is at or ahead of target → miss to maintain pacing.
     return believableMiss(state, rng) || smartCheatHit(state, rng);
   }
 
