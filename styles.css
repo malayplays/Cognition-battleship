@@ -2418,6 +2418,37 @@ body {
   :root { --cell-size: clamp(22px, calc((100vw - 50px) / 11), 28px); }
 }
 
+/* ============================================================
+   PERFORMANCE — GPU layer promotion & layout containment
+   ============================================================ */
+
+/* Promote continuously-animated background layers to their own
+   compositor layers so they don't repaint the main thread.         */
+.cloud, .wave, .bird, .fish, .bubble, .seaweed-strand, .idle-ship,
+.sea-particle, .bg-foam, .confetti {
+  will-change: transform;
+}
+
+/* Board cells rarely resize and never affect siblings. Containing
+   layout + paint lets the browser skip style-recalc for siblings
+   when a single cell updates.                                      */
+.cell:not(.label) {
+  contain: layout style paint;
+}
+
+/* Board frames contain their own stacking context and layout       */
+.board-frame {
+  contain: layout style;
+}
+
+/* Hidden modals / screens: skip rendering entirely until shown     */
+.modal.hidden {
+  content-visibility: hidden;
+}
+.screen:not(.active) {
+  content-visibility: hidden;
+}
+
 /* Reduce motion */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {

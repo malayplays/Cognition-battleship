@@ -3,25 +3,45 @@
 const COL_LABELS = ['A','B','C','D','E','F','G','H','I','J'];
 
 const Render = (() => {
+  // ── Cell-reference cache ────────────────────────────────────────────
+  // Indexed as _cellCache[containerId][r][c]. Populated once by
+  // buildBoardDOM so that every subsequent lookup is O(1) instead of a
+  // full querySelector traversal.
+  const _cellCache = {};
+
+  // ── Previous-state snapshots for dirty checking ────────────────────
+  // Keyed by containerId. Each entry stores the last-rendered classKey
+  // per cell so renderBoard can skip cells that haven't changed.
+  const _prevState = {};
+
   function buildBoardDOM(containerId) {
     const container = document.getElementById(containerId);
     container.innerHTML = '';
+    const frag = document.createDocumentFragment();
     // Top-left corner
-    container.appendChild(makeLabelCell(''));
+    frag.appendChild(makeLabelCell(''));
     // Column labels
     for (let c = 0; c < BOARD_SIZE; c++) {
-      container.appendChild(makeLabelCell(COL_LABELS[c]));
+      frag.appendChild(makeLabelCell(COL_LABELS[c]));
     }
+    // Init cache grid
+    const grid = [];
     for (let r = 0; r < BOARD_SIZE; r++) {
-      container.appendChild(makeLabelCell(String(r + 1)));
+      frag.appendChild(makeLabelCell(String(r + 1)));
+      const row = [];
       for (let c = 0; c < BOARD_SIZE; c++) {
         const cell = document.createElement('div');
         cell.className = 'cell';
         cell.dataset.row = r;
         cell.dataset.col = c;
-        container.appendChild(cell);
+        frag.appendChild(cell);
+        row.push(cell);
       }
+      grid.push(row);
     }
+    container.appendChild(frag);
+    _cellCache[containerId] = grid;
+    _prevState[containerId] = null; // force full render on first pass
   }
 
   function makeLabelCell(text) {
@@ -32,17 +52,52 @@ const Render = (() => {
   }
 
   function cellEl(containerId, r, c) {
-    return document.querySelector(
-      `#${containerId} .cell[data-row="${r}"][data-col="${c}"]`
-    );
+    const grid = _cellCache[containerId];
+    return grid ? grid[r][c] : null;
+  }
+
+  // Build a lightweight key that captures the visual state of a cell so
+  // we can skip DOM work when nothing changed.
+  function cellStateKey(cell, ship, isEnemy, revealShips) {
+    if (cell.shot && cell.ship) {
+      return ship && ship.sunk ? 'K' : 'H';
+    }
+    if (cell.shot) return 'M';
+    if (cell.ship && revealShips) return 'S';
+    if (isEnemy && cell.ship && ship && ship.sunk) return 'R';
+    return '';
   }
 
   function renderBoard(containerId, side, { revealShips }) {
     const isEnemy = containerId === 'ai-board';
+    const grid = _cellCache[containerId];
+    if (!grid) return;
+
+    // Build a Map of shipId → ship once to avoid repeated .find() calls
+    const shipMap = new Map();
+    for (let i = 0; i < side.ships.length; i++) {
+      shipMap.set(side.ships[i].id, side.ships[i]);
+    }
+
+    // Allocate / reuse previous-state snapshot
+    let prev = _prevState[containerId];
+    const snap = prev || new Array(BOARD_SIZE * BOARD_SIZE);
+
     for (let r = 0; r < BOARD_SIZE; r++) {
       for (let c = 0; c < BOARD_SIZE; c++) {
-        const el = cellEl(containerId, r, c);
-        if (!el) continue;
+        const el = grid[r][c];
+        const cell = side.board[r][c];
+        const ship = cell.ship ? shipMap.get(cell.ship) : null;
+        const key = cellStateKey(cell, ship, isEnemy, revealShips);
+        const idx = r * BOARD_SIZE + c;
+
+        // Skip if nothing changed for this cell
+        if (prev && snap[idx] === key) {
+          // But still preserve transient animation classes
+          continue;
+        }
+        snap[idx] = key;
+
         // Preserve hit-new/sunk-new/miss-new temporarily for animation
         const wasHitNew = el.classList.contains('hit-new');
         const wasSunkNew = el.classList.contains('sunk-new');
@@ -55,28 +110,30 @@ const Render = (() => {
         delete el.dataset.shipIdx;
         delete el.dataset.shipLen;
         // Remove dynamic children (smoke, splash, wreckage)
-        el.querySelectorAll('.smoke-puff, .splash-drop, .wreckage-piece, .ship-wave').forEach(c => c.remove());
-
-        const cell = side.board[r][c];
-        const shipId = cell.ship;
-        const ship = shipId ? side.ships.find(s => s.id === shipId) : null;
-
-        if (cell.shot && shipId) {
-          if (ship && ship.sunk) {
-            el.classList.add('sunk');
-            addWrackageDetails(el);
-            if (ship) setShipCellData(el, ship, r, c);
-          } else {
-            el.classList.add('hit');
-            addSmokeDetails(el);
+        let child = el.lastElementChild;
+        while (child) {
+          const prev_child = child.previousElementSibling;
+          const cn = child.className;
+          if (cn === 'smoke-puff' || cn === 'splash-drop' || cn === 'wreckage-piece' || cn === 'ship-wave') {
+            el.removeChild(child);
           }
-        } else if (cell.shot) {
+          child = prev_child;
+        }
+
+        if (key === 'K') {
+          el.classList.add('sunk');
+          addWrackageDetails(el);
+          if (ship) setShipCellData(el, ship, r, c);
+        } else if (key === 'H') {
+          el.classList.add('hit');
+          addSmokeDetails(el);
+        } else if (key === 'M') {
           el.classList.add('miss');
           addSplashDetails(el);
-        } else if (shipId && revealShips) {
+        } else if (key === 'S') {
           el.classList.add('ship');
           if (ship) setShipCellData(el, ship, r, c);
-        } else if (isEnemy && shipId && ship && ship.sunk) {
+        } else if (key === 'R') {
           el.classList.add('sunk-revealed');
           if (ship) setShipCellData(el, ship, r, c);
         }
@@ -86,6 +143,7 @@ const Render = (() => {
         if (wasMissNew) el.classList.add('miss-new');
       }
     }
+    _prevState[containerId] = snap;
     renderShipOverlays(containerId, side, { revealShips });
   }
 
@@ -112,8 +170,30 @@ const Render = (() => {
     destroyer:  'assets/ships/destroyer1.png'
   };
 
+  // Pre-decode sprite images so the browser doesn't re-decode on each overlay rebuild
+  const _spriteImages = {};
+  for (const [id, src] of Object.entries(SHIP_SPRITES)) {
+    const img = new Image();
+    img.src = src;
+    img.decoding = 'async';
+    _spriteImages[id] = img;
+  }
+
+  // Track last overlay state to skip redundant rebuilds
+  const _overlayKeys = {};
+
   // Render each placed ship as a single continuous overlay spanning its full footprint
   function renderShipOverlays(containerId, side, { revealShips }) {
+    // Build a key representing current overlay state to skip redundant rebuilds
+    let overlayKey = revealShips ? '1' : '0';
+    for (let i = 0; i < side.ships.length; i++) {
+      const s = side.ships[i];
+      overlayKey += s.cells.length >= 2 ? (s.sunk ? 'K' : (revealShips ? 'V' : '_')) : '_';
+      if (s.cells.length) overlayKey += s.cells[0][0] + ',' + s.cells[0][1];
+    }
+    if (_overlayKeys[containerId] === overlayKey) return;
+    _overlayKeys[containerId] = overlayKey;
+
     const container = document.getElementById(containerId);
     let layer = container.querySelector('.ship-overlay-layer');
     if (layer) layer.remove();
@@ -149,12 +229,11 @@ const Render = (() => {
         overlay.classList.add('ship-sunk-overlay');
       }
 
-      // Add sprite image
-      const spriteSrc = SHIP_SPRITES[ship.id];
-      if (spriteSrc) {
-        const img = document.createElement('img');
+      // Add sprite image (clone pre-loaded Image to avoid re-decode)
+      const cachedImg = _spriteImages[ship.id];
+      if (cachedImg) {
+        const img = cachedImg.cloneNode(false);
         img.className = 'ship-sprite';
-        img.src = spriteSrc;
         img.alt = ship.id;
         img.draggable = false;
 
@@ -211,28 +290,39 @@ const Render = (() => {
     }
   }
 
+  function _setPlayable(containerId, playable) {
+    const grid = _cellCache[containerId];
+    if (!grid) return;
+    for (let r = 0; r < BOARD_SIZE; r++) {
+      for (let c = 0; c < BOARD_SIZE; c++) {
+        grid[r][c].classList.toggle('playable', playable);
+      }
+    }
+  }
+
   function setEnemyPlayable(playable) {
-    document.querySelectorAll('#ai-board .cell:not(.label)').forEach(el => {
-      el.classList.toggle('playable', playable);
-    });
+    _setPlayable('ai-board', playable);
   }
 
   function setPlayerPlayable(playable) {
-    document.querySelectorAll('#player-board .cell:not(.label)').forEach(el => {
-      el.classList.toggle('playable', playable);
-    });
+    _setPlayable('player-board', playable);
   }
 
+  let _fleetListEl = null;
   function renderFleetList(state) {
-    const ul = document.getElementById('fleet-list');
-    ul.innerHTML = '';
-    state.player.ships.forEach((s, i) => {
+    if (!_fleetListEl) _fleetListEl = document.getElementById('fleet-list');
+    const ul = _fleetListEl;
+    const frag = document.createDocumentFragment();
+    for (let i = 0; i < state.player.ships.length; i++) {
+      const s = state.player.ships[i];
       const li = document.createElement('li');
       li.textContent = `${s.name} (${s.size})`;
       if (s.cells.length === s.size) li.classList.add('placed');
       else if (i === state.placement.nextIndex) li.classList.add('current');
-      ul.appendChild(li);
-    });
+      frag.appendChild(li);
+    }
+    ul.textContent = ''; // faster than innerHTML = ''
+    ul.appendChild(frag);
   }
 
   function renderTurnIndicator(state) {
@@ -270,7 +360,15 @@ const Render = (() => {
   }
 
   function clearLog() {
-    document.getElementById('message-log').innerHTML = '';
+    document.getElementById('message-log').textContent = '';
+  }
+
+  // Invalidate dirty-tracking caches (call on game reset)
+  function invalidateCaches() {
+    _prevState['player-board'] = null;
+    _prevState['ai-board'] = null;
+    _overlayKeys['player-board'] = null;
+    _overlayKeys['ai-board'] = null;
   }
 
   function showPreview(state, row, col) {
@@ -287,8 +385,16 @@ const Render = (() => {
   }
 
   function clearPreview() {
-    document.querySelectorAll('#player-board .cell.preview, #player-board .cell.preview-invalid')
-      .forEach(el => el.classList.remove('preview', 'preview-invalid'));
+    const grid = _cellCache['player-board'];
+    if (!grid) return;
+    for (let r = 0; r < BOARD_SIZE; r++) {
+      for (let c = 0; c < BOARD_SIZE; c++) {
+        const el = grid[r][c];
+        if (el.classList.contains('preview') || el.classList.contains('preview-invalid')) {
+          el.classList.remove('preview', 'preview-invalid');
+        }
+      }
+    }
   }
 
   function showEndModal(state) {
@@ -343,8 +449,9 @@ const Render = (() => {
   function renderSideFleetStatus(containerId, ships, hideUnsunk) {
     const container = document.getElementById(containerId);
     if (!container) return;
-    container.innerHTML = '';
-    ships.forEach(s => {
+    const frag = document.createDocumentFragment();
+    for (let i = 0; i < ships.length; i++) {
+      const s = ships[i];
       const icon = document.createElement('span');
       icon.className = 'fleet-status-icon';
       if (s.sunk) {
@@ -357,22 +464,29 @@ const Render = (() => {
         icon.textContent = hideUnsunk ? '?' : s.name.charAt(0);
       }
       icon.title = s.sunk ? `${s.name} - SUNK` : s.hits > 0 ? `${s.name} - HIT (${s.hits}/${s.size})` : s.name;
-      container.appendChild(icon);
-    });
+      frag.appendChild(icon);
+    }
+    container.textContent = '';
+    container.appendChild(frag);
   }
 
   // Screen management
+  let _screens = null;
   function showScreen(screenId) {
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    if (!_screens) _screens = document.querySelectorAll('.screen');
+    for (let i = 0; i < _screens.length; i++) {
+      _screens[i].classList.remove('active');
+    }
     const screen = document.getElementById(screenId);
     if (screen) screen.classList.add('active');
   }
 
   return {
     buildBoardDOM, renderBoard, renderFleetList, renderTurnIndicator,
-    setEnemyPlayable, setPlayerPlayable, log, clearLog,
+    setEnemyPlayable, setPlayerPlayable, log, clearLog, invalidateCaches,
     showPreview, clearPreview, showEndModal, hideEndModal,
     setRotateLabel, setSetupPanelVisible, setStartEnabled,
     markNewShot, renderFleetStatus, showScreen,
+    _cellEl: cellEl,
   };
 })();
