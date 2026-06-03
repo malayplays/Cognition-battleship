@@ -1572,12 +1572,12 @@ body {
   display: block;
 }
 
-/* Horizontal: 89% of long axis, 75% of cell height on short axis.
+/* Horizontal: 89% of long axis, 60% of cell height on short axis.
    object-fit:contain preserves aspect ratio within the padded box.
    Flexbox on the overlay keeps the sprite centered. */
 .ship-overlay.ship-orient-H .ship-sprite {
   width: 89%;
-  height: 75%;
+  height: 60%;
   object-fit: contain;
 }
 
@@ -1594,7 +1594,7 @@ body {
   position: absolute;
   top: 50%;
   left: 50%;
-  height: calc(var(--cell-size) * 0.75);
+  height: calc(var(--cell-size) * 0.60);
   object-fit: contain;
   transform: translate(-50%, -50%) rotate(90deg);
 }
