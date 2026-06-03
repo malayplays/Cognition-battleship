@@ -86,6 +86,7 @@ const Render = (() => {
         if (wasMissNew) el.classList.add('miss-new');
       }
     }
+    renderShipOverlays(containerId, side, { revealShips });
   }
 
   // Set ship type, position (bow/mid/stern), orientation, index, length data on cell
@@ -100,6 +101,49 @@ const Render = (() => {
       if (idx === 0) el.dataset.shipPos = 'bow';
       else if (idx === ship.cells.length - 1) el.dataset.shipPos = 'stern';
     }
+  }
+
+  // Render each placed ship as a single continuous overlay spanning its full footprint
+  function renderShipOverlays(containerId, side, { revealShips }) {
+    const container = document.getElementById(containerId);
+    let layer = container.querySelector('.ship-overlay-layer');
+    if (layer) layer.remove();
+
+    const hasVisibleShips = side.ships.some(ship =>
+      ship.cells.length >= 2 && (revealShips || ship.sunk)
+    );
+    if (!hasVisibleShips) return;
+
+    layer = document.createElement('div');
+    layer.className = 'ship-overlay-layer';
+
+    side.ships.forEach(ship => {
+      if (ship.cells.length < 2) return;
+      if (!revealShips && !ship.sunk) return;
+
+      const orient = ship.cells[0][0] === ship.cells[1][0] ? 'H' : 'V';
+      const startRow = Math.min(...ship.cells.map(([r]) => r));
+      const startCol = Math.min(...ship.cells.map(([, c]) => c));
+
+      const overlay = document.createElement('div');
+      overlay.className = 'ship-overlay ship-' + ship.id + ' ship-orient-' + orient;
+
+      if (orient === 'H') {
+        overlay.style.gridRow = String(startRow + 2);
+        overlay.style.gridColumn = (startCol + 2) + ' / span ' + ship.cells.length;
+      } else {
+        overlay.style.gridRow = (startRow + 2) + ' / span ' + ship.cells.length;
+        overlay.style.gridColumn = String(startCol + 2);
+      }
+
+      if (ship.sunk) {
+        overlay.classList.add('ship-sunk-overlay');
+      }
+
+      layer.appendChild(overlay);
+    });
+
+    container.appendChild(layer);
   }
 
   // Add smoke puff elements to hit cells
