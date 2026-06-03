@@ -9,9 +9,11 @@
 
 const AI = (() => {
   // ─── Impossible-mode tunable constants ───
-  const LEAD_MARGIN = 2;          // hits the AI lets itself trail by mid-game
-  const MIDGAME_HIT_CHANCE = 0.3; // probability of a real hit when within margin
-  const ENDGAME_TRIGGER = 3;      // playerShotsToWin threshold to go lethal
+  // The AI maintains aiShotsToWin = playerShotsToWin - PACE_OFFSET at all times.
+  // This keeps it exactly PACE_OFFSET optimal hits ahead of the player in the race.
+  // Because the player fires first each turn and hits randomly, being 1 hit ahead
+  // in optimal terms guarantees the AI finishes first.
+  const PACE_OFFSET = 1;          // AI stays this many optimal hits ahead of player
 
   const ORTHO = [[-1, 0], [1, 0], [0, -1], [0, 1]];
   const AXES = [[0, 1], [1, 0]]; // horizontal, vertical
@@ -204,39 +206,23 @@ const AI = (() => {
     const aiShotsToWin = shotsToWin(state.player);   // what AI still needs
     const playerShotsToWin = shotsToWin(state.ai);   // what player still needs
 
-    // ─── ENDGAME: go lethal ───
-    if (playerShotsToWin <= ENDGAME_TRIGGER) {
-      // Every shot is a guaranteed cheat hit (no need to exclude winning)
-      const hit = cheatHit(state, rng, false);
-      if (hit) return hit;
-      // Fallback (shouldn't happen)
-      return believableMiss(state, rng);
+    // Target: AI should need exactly (playerShotsToWin - PACE_OFFSET) hits.
+    // This keeps AI one optimal hit ahead at all times.
+    const target = playerShotsToWin - PACE_OFFSET;
+
+    // If one more hit wins the game for AI, take it unconditionally.
+    // This fires when playerShotsToWin = 2 and aiShotsToWin = 1 (tight finish).
+    if (aiShotsToWin === 1) {
+      return cheatHit(state, rng, false);
     }
 
-    // ─── HOLDBACK / PACING ───
-    // Tighten margin as endgame approaches
-    const distToEndgame = playerShotsToWin - ENDGAME_TRIGGER;
-    const effectiveMargin = Math.min(LEAD_MARGIN, distToEndgame);
-
-    if (aiShotsToWin <= playerShotsToWin) {
-      // AI is ahead or tied — deliberately miss to let player catch up
-      return believableMiss(state, rng) || cheatHit(state, rng, true);
+    // If AI needs more hits than target, it's behind — take a guaranteed hit.
+    if (aiShotsToWin > target) {
+      return cheatHit(state, rng, false) || believableMiss(state, rng);
     }
 
-    if (aiShotsToWin > playerShotsToWin + effectiveMargin) {
-      // AI lagging too far behind — take a guaranteed hit to catch up
-      const hit = cheatHit(state, rng, true);
-      if (hit) return hit;
-      // If we can't hit without winning, miss instead
-      return believableMiss(state, rng);
-    }
-
-    // Within margin — mostly miss, occasional real hit to look natural
-    if (rng() < MIDGAME_HIT_CHANCE) {
-      const hit = cheatHit(state, rng, true);
-      if (hit) return hit;
-    }
-    return believableMiss(state, rng) || cheatHit(state, rng, true);
+    // AI is at or ahead of target — miss to maintain pacing.
+    return believableMiss(state, rng) || cheatHit(state, rng, false);
   }
 
   function getAIMove(state, difficulty, rng = Math.random) {
